@@ -36,20 +36,17 @@ public class ButtonComponent extends LabelComponent implements MouseClickEventLi
     private static Vector4d buttonPressedColor = new Vector4d(0.6f, 0.6f, 0.6f, 1f);
 
     public ButtonComponent(double w, double h, String text) {
-        this(new Vector2d(0, 0), new Vector2d(w, h), text);
+        this(new Vector2d(0, 0), w, h, text);
     }
 
-    public ButtonComponent(Vector2d topLeft, double w, double h, String text) {
-        this(topLeft, new Vector2d(topLeft.x + w, topLeft.y + h), text);
-    }
-
-    public ButtonComponent(Vector2d topLeft, Vector2d bottomRight, String text) {
-        super(topLeft, bottomRight, buttonHoveredColor, text);
+    public ButtonComponent(Vector2d translate, double w, double h, String text) {
+        super(translate, w, h, buttonHoveredColor, text);
         this.cursor = GLFW_HAND_CURSOR;
     }
 
     @Override
     public void draw() {
+
         if (this.pressed) {
             this.color = buttonPressedColor;
         } else if (this.getHovered()) {
@@ -57,16 +54,26 @@ public class ButtonComponent extends LabelComponent implements MouseClickEventLi
         } else {
             this.color = buttonDefaultColor;
         }
-        Utility.drawRectangleFill(topLeft, bottomRight);
-        double margin = -2;
-        glColor4d(0.5f, 0.5f, 0.5f, 1f);
-        Utility.drawRectangleFill(new Vector2d(topLeft).sub(margin, margin),
-                new Vector2d(bottomRight).add(margin, margin));
-        super.draw();
+
+        glPushMatrix();
+        Utility.glTransform(dimension, translate, scale, rotate);
+
+        glColor4d(color.x, color.y, color.z, 1f);
+        Utility.drawRectangleFill(dimension);
+        double margin = 2;
+
+        glPushMatrix();
+        glTranslated(margin / 2, margin / 2, 0);
+        Utility.drawRectangleFill(new Vector2d(dimension).sub(margin, margin));
+        glPopMatrix();
+
+        drawText();
+        glPopMatrix();
     }
 
     @Override
     public void onMouseClicked(MouseEvent event) {
+        System.out.println(event);
         event.cancel();
         switch (event.getButton()) {
             case GLFW_MOUSE_BUTTON_LEFT:

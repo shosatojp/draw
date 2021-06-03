@@ -25,6 +25,10 @@ public class MouseEvent extends Event {
         return pos;
     }
 
+    public void setPos(Vector2d pos) {
+        this.pos = pos;
+    }
+
     public int getAction() {
         return action;
     }

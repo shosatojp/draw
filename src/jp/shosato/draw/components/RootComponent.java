@@ -9,6 +9,7 @@ import jp.shosato.draw.utils.BoundingBox;
 public class RootComponent extends BasicComponent {
 
     public RootComponent(Window window, Controller controller) {
+        this.dimension = new Vector2d(window.getWidth(), window.getHeight());
         this.window = window;
         this.controller = controller;
         this.parent = null;
@@ -25,6 +26,7 @@ public class RootComponent extends BasicComponent {
     }
 
     @Override
-    public void translate(Vector2d d) {
+    public Vector2d getCenter() {
+        return new Vector2d(dimension).div(2);
     }
 }

@@ -20,6 +20,7 @@ import jp.shosato.draw.events.mouse.MouseEnterEventListener;
 import jp.shosato.draw.events.mouse.MouseEvent;
 import jp.shosato.draw.events.mouse.MouseLeaveEventListener;
 import jp.shosato.draw.events.mouse.MouseMoveEventListener;
+import jp.shosato.draw.utils.Utility;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -49,7 +50,7 @@ public class Controller {
             public void invoke(long window, int button, int action, int mods) {
                 MouseEvent event = new MouseEvent(pos, button, action, mods);
                 if (rootComponent != null) {
-                    invokeMouseClickIn(rootComponent, event);
+                    invokeMouseClickIn(rootComponent, event, pos);
                 }
             }
 
@@ -104,22 +105,26 @@ public class Controller {
             /**
              * [マウスクリックイベント] 辿る子要素をクリック座標がその範囲に含まれているかによって制限
              */
-            private void invokeMouseClickIn(BasicComponent component, MouseEvent event) {
+            private void invokeMouseClickIn(BasicComponent component, MouseEvent event, Vector2d relPos) {
+                Vector2d originalPos = new Vector2d(relPos);
+                Vector2d untransformed = Utility.untransform(relPos, component.getCenter(), component.translate,
+                        component.scale, component.rotate);
                 boolean cond = component instanceof MouseClickEventListener;
 
                 // captureing phase
                 if (cond && !event.cancelled()) {
                     event.setCurrentTarget(component);
                     event.setTarget(component);
+                    event.setPos(originalPos);
                     MouseClickEventListener listener = (MouseClickEventListener) component;
                     listener.onMouseClicked(event, true);
                 }
-
                 for (Iterator<BasicComponent> iter = component.getChildren().descendingIterator(); iter.hasNext();) {
                     BasicComponent child = iter.next();
                     // すべての要素に対して
-                    if (child.contains(event.getPos())) {
-                        invokeMouseClickIn(child, event);
+                    if (child.contains(untransformed)) {
+                        event.setPos(untransformed);
+                        invokeMouseClickIn(child, event, untransformed);
                         if (event.cancelled())
                             return;
                     }
@@ -129,8 +134,8 @@ public class Controller {
                 // if (cond && !event.cancelled()) {
                 if (event.getTarget() != null && !event.cancelled()) {
                     if (component instanceof MouseClickEventListener) {
-
                         event.setCurrentTarget(component);
+                        event.setPos(originalPos);
                         MouseClickEventListener listener = (MouseClickEventListener) component;
                         listener.onMouseClicked(event);
                     }
@@ -151,14 +156,14 @@ public class Controller {
                 pos = new Vector2d(x, y);
 
                 if (rootComponent != null) {
-                    invokeMouseMoveIn(rootComponent, new MouseEvent(pos, 0, 0, 0));
-                    invokeMouseLeaveIn(rootComponent, new MouseEvent(pos, 0, 0, 0));
-                    invokeMouseEnterIn(rootComponent, new MouseEvent(pos, 0, 0, 0));
+                    invokeMouseMoveIn(rootComponent, new MouseEvent(pos, 0, 0, 0), pos);
+                    invokeMouseLeaveIn(rootComponent, new MouseEvent(pos, 0, 0, 0), pos);
+                    invokeMouseEnterIn(rootComponent, new MouseEvent(pos, 0, 0, 0), pos);
 
                     {
                         // カーソルの設定
                         MouseEvent cursorSettingEvent = new MouseEvent(pos, 0, 0, 0);
-                        invokeCursorSetter(rootComponent, cursorSettingEvent);
+                        invokeCursorSetter(rootComponent, cursorSettingEvent, pos);
 
                         int currentCursorShape = 0;
                         BasicComponent target = cursorSettingEvent.getTarget();
@@ -174,13 +179,16 @@ public class Controller {
             /**
              * カーソル設定用の探索関数。カーソルが指している最前面の要素がほしいのでtargetのみ設定して回る
              */
-            private void invokeCursorSetter(BasicComponent component, MouseEvent event) {
+            private void invokeCursorSetter(BasicComponent component, MouseEvent event, Vector2d relPos) {
+                Vector2d untransformed = Utility.untransform(relPos, component.getCenter(), component.translate,
+                        component.scale, component.rotate);
 
                 event.setTarget(component);
 
                 for (BasicComponent child : component.getChildren()) {
-                    if (child.contains(event.getPos())) {
-                        invokeCursorSetter(child, event);
+                    if (child.contains(untransformed)) {
+                        event.setPos(untransformed);
+                        invokeCursorSetter(child, event, untransformed);
                         if (event.cancelled())
                             return;
                     }
@@ -190,13 +198,18 @@ public class Controller {
             /**
              * [マウス移動イベント] クリックと同じ
              */
-            private void invokeMouseMoveIn(BasicComponent component, MouseEvent event) {
+            private void invokeMouseMoveIn(BasicComponent component, MouseEvent event, Vector2d relPos) {
+                Vector2d originalPos = new Vector2d(relPos);
+                Vector2d untransformed = Utility.untransform(relPos, component.getCenter(), component.translate,
+                        component.scale, component.rotate);
+
                 boolean cond = component instanceof MouseMoveEventListener;
 
                 // captureing phase
                 if (cond) {
                     event.setCurrentTarget(component);
                     event.setTarget(component);
+                    event.setPos(originalPos);
                     MouseMoveEventListener listener = (MouseMoveEventListener) component;
                     listener.onMouseMoved(event, true);
                     if (event.cancelled())
@@ -205,8 +218,9 @@ public class Controller {
 
                 for (Iterator<BasicComponent> iter = component.getChildren().descendingIterator(); iter.hasNext();) {
                     BasicComponent child = iter.next();
-                    if (child.contains(event.getPos())) {
-                        invokeMouseMoveIn(child, event);
+                    if (child.contains(untransformed)) {
+                        event.setPos(untransformed);
+                        invokeMouseMoveIn(child, event, untransformed);
                         if (event.cancelled())
                             return;
                     }
@@ -221,6 +235,7 @@ public class Controller {
                     if (component instanceof MouseMoveEventListener) {
 
                         event.setCurrentTarget(component);
+                        event.setPos(originalPos);
                         MouseMoveEventListener listener = (MouseMoveEventListener) component;
                         listener.onMouseMoved(event);
                     }
@@ -230,15 +245,18 @@ public class Controller {
             /**
              * [マウス離脱イベント] 他のイベントと違い、イベントを発行したい要素外にポインタがあるときに発行するのですべての子要素に対して前の状態と比較する
              */
-            private void invokeMouseLeaveIn(BasicComponent component, MouseEvent event) {
-
-                boolean cond = !component.contains(event.getPos()) && component.getHovered();
+            private void invokeMouseLeaveIn(BasicComponent component, MouseEvent event, Vector2d relPos) {
+                Vector2d originalPos = new Vector2d(relPos);
+                Vector2d untransformed = Utility.untransform(relPos, component.getCenter(), component.translate,
+                        component.scale, component.rotate);
+                boolean cond = !component.contains(originalPos) && component.getHovered();
                 // captureing phase
                 if (cond) {
                     if (component instanceof MouseLeaveEventListener) {
                         component.setHovered(false);
                         event.setCurrentTarget(component);
                         event.setTarget(component);
+                        event.setPos(originalPos);
                         // TODO: 別のイベントにすべき？
                         MouseLeaveEventListener listener = (MouseLeaveEventListener) component;
                         listener.onMouseLeave(event, true);
@@ -250,7 +268,8 @@ public class Controller {
                 for (Iterator<BasicComponent> iter = component.getChildren().descendingIterator(); iter.hasNext();) {
                     BasicComponent child = iter.next();
                     // すべての要素に対して
-                    invokeMouseLeaveIn(child, event);
+                    event.setPos(untransformed);
+                    invokeMouseLeaveIn(child, event, untransformed);
                     if (event.cancelled())
                         return;
                 }
@@ -265,14 +284,18 @@ public class Controller {
                         component.setHovered(false);
                         event.setCurrentTarget(component);
                         event.setTarget(component);
+                        event.setPos(originalPos);
                         MouseLeaveEventListener listener = (MouseLeaveEventListener) component;
                         listener.onMouseLeave(event);
                     }
                 }
             }
 
-            private void invokeMouseEnterIn(BasicComponent component, MouseEvent event) {
-                boolean cond = component.contains(event.getPos()) && !component.getHovered();
+            private void invokeMouseEnterIn(BasicComponent component, MouseEvent event, Vector2d relPos) {
+                Vector2d originalPos = new Vector2d(relPos);
+                Vector2d untransformed = Utility.untransform(relPos, component.getCenter(), component.translate,
+                        component.scale, component.rotate);
+                boolean cond = component.contains(originalPos) && !component.getHovered();
 
                 // captureing phase
                 if (cond) {
@@ -280,6 +303,7 @@ public class Controller {
                         component.setHovered(true);
                         event.setCurrentTarget(component);
                         event.setTarget(component);
+                        event.setPos(originalPos);
                         MouseEnterEventListener listener = (MouseEnterEventListener) component;
                         listener.onMouseEnter(event, true);
                         if (event.cancelled())
@@ -290,8 +314,9 @@ public class Controller {
                 for (Iterator<BasicComponent> iter = component.getChildren().descendingIterator(); iter.hasNext();) {
                     BasicComponent child = iter.next();
                     // すべての要素に対して
-                    if (child.contains(event.getPos())) {
-                        invokeMouseEnterIn(child, event);
+                    if (child.contains(untransformed)) {
+                        event.setPos(untransformed);
+                        invokeMouseEnterIn(child, event, untransformed);
                         if (event.cancelled())
                             return;
                     }
@@ -306,6 +331,7 @@ public class Controller {
                     if (component instanceof MouseEnterEventListener) {
                         component.setHovered(true);
                         event.setCurrentTarget(component);
+                        event.setPos(originalPos);
                         MouseEnterEventListener listener = (MouseEnterEventListener) component;
                         listener.onMouseEnter(event);
                     }

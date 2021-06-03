@@ -59,27 +59,30 @@ public class InputComponent extends LabelComponent implements CharInputEventList
             if (text == null)
                 return;
 
-            FontMetrics metrics = this.getMetrix();
+            drawCursor(getMetrix(), text);
 
-            glPushMatrix();
-
-            int cursorW = metrics.stringWidth(text.substring(0, this.cursorPosition));
-            int w = metrics.stringWidth(text);
-            int h = metrics.getHeight();
-
-            Vector2d textTopLeft = getTextTopLeft(w, h);
-            glTranslated(topLeft.x + textTopLeft.x, topLeft.y + textTopLeft.y, 0);
-
-            glLineWidth(2);
-            glColor4d(0, 0, 0, 1);
-            glBegin(GL_LINES);
-            glVertex2d(cursorW, 0);
-            glVertex2d(cursorW, h);
-            glEnd();
-
-            glPopMatrix();
         }
 
+    }
+
+    protected void drawCursor(FontMetrics metrics, String text) {
+        glPushMatrix();
+
+        int cursorW = metrics.stringWidth(text.substring(0, this.cursorPosition));
+        int w = metrics.stringWidth(text);
+        int h = metrics.getHeight();
+
+        Vector2d textTopLeft = getTextTopLeft(w, h);
+        glTranslated(textTopLeft.x, textTopLeft.y, 0);
+
+        glLineWidth(2);
+        glColor4d(0, 0, 0, 1);
+        glBegin(GL_LINES);
+        glVertex2d(cursorW, 0);
+        glVertex2d(cursorW, h);
+        glEnd();
+
+        glPopMatrix();
     }
 
     @Override

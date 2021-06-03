@@ -45,6 +45,15 @@ public class Utility {
         glPopMatrix();
     }
 
+    public static void drawRectangleFill(Vector2d dimension) {
+        glBegin(GL_QUADS);
+        glVertex2d(0, 0);
+        glVertex2d(dimension.x, 0);
+        glVertex2d(dimension.x, dimension.y);
+        glVertex2d(0, dimension.y);
+        glEnd();
+    }
+
     public static void drawRectangleFill(Vector2d topLeft, Vector2d bottomRight) {
         glBegin(GL_QUADS);
         glVertex2d(topLeft.x, topLeft.y);
@@ -190,5 +199,70 @@ public class Utility {
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    public static Vector2d translate(Vector2d pos, Vector2d translate) {
+        return new Vector2d(pos).add(translate);
+    }
+
+    public static void translateInplace(Vector2d pos, Vector2d translate) {
+        pos.add(translate);
+    }
+
+    public static Vector2d rotate(Vector2d pos, double rotate_degree) {
+        double radian = rotate_degree * Math.PI / 180;
+        return new Vector2d(Math.cos(radian) * pos.x + Math.sin(radian) * pos.y,
+                -Math.sin(radian) * pos.x + Math.cos(radian) * pos.y);
+    }
+
+    public static void rotateInplace(Vector2d pos, double rotate_degree) {
+        double radian = rotate_degree * Math.PI / 180;
+        double x = Math.cos(radian) * pos.x + Math.sin(radian) * pos.y;
+        double y = -Math.sin(radian) * pos.x + Math.cos(radian) * pos.y;
+        pos.x = x;
+        pos.y = y;
+    }
+
+    public static Vector2d scale(Vector2d pos, Vector2d scale) {
+        return new Vector2d(pos).mul(scale);
+    }
+
+    public static void scaleInplace(Vector2d pos, Vector2d scale) {
+        pos.mul(scale);
+    }
+
+    public static Vector2d transform(Vector2d pos, Vector2d center, Vector2d translate, Vector2d scale,
+            double rotate_degree) {
+        Vector2d newpos = new Vector2d(pos);
+        Utility.translateInplace(newpos, new Vector2d(center).mul(-1));
+        Utility.rotateInplace(newpos, rotate_degree);
+        Utility.scaleInplace(newpos, scale);
+        Utility.translateInplace(newpos, translate);
+        Utility.translateInplace(newpos, center);
+        return newpos;
+    }
+
+    public static Vector2d untransform(Vector2d pos, Vector2d center, Vector2d translate, Vector2d scale,
+            double rotate_degree) {
+        Vector2d newpos = new Vector2d(pos);
+        Utility.translateInplace(newpos, new Vector2d(center).mul(-1));
+        Utility.translateInplace(newpos, new Vector2d(translate).mul(-1));
+        Utility.rotateInplace(newpos, -rotate_degree);
+        Utility.scaleInplace(newpos, new Vector2d(1, 1).div(scale));
+        Utility.translateInplace(newpos, center);
+        return newpos;
+    }
+
+    public static void glTransform(Vector2d dimension, Vector2d translate, Vector2d scale, double rotate) {
+        glTranslated(dimension.x / 2, dimension.y / 2, 0);
+        glTranslated(translate.x, translate.y, 0);
+        glScaled(scale.x, scale.y, 1);
+        glRotated(rotate, 0, 0, -1);
+        glTranslated(-dimension.x / 2, -dimension.y / 2, 0);
+        // glTranslated(-dimension.x / 2, -dimension.y / 2, 0);
+        // glRotated(rotate, 0, 0, 1);
+        // glScaled(scale.x, scale.y, 1);
+        // glTranslated(translate.x, translate.y, 0);
+        // glTranslated(dimension.x / 2, dimension.y / 2, 0);
     }
 }

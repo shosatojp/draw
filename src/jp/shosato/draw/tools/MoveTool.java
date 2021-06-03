@@ -39,7 +39,7 @@ public class MoveTool extends Tool
             Vector2d pos = event.getPos();
             Vector2d diff = new Vector2d(pos).sub(prevPos);
             for (FigureComponent figure : selectTool.getSelected()) {
-                figure.translate(diff);
+                figure.translate.add(diff);
             }
             prevPos = pos;
         }

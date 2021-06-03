@@ -101,11 +101,4 @@ public class PolygonFigure extends FigureComponent {
     public ArrayList<Vector2d> getVertices() {
         return vertices;
     }
-
-    @Override
-    public void translate(Vector2d d) {
-        for (Vector2d v : vertices) {
-            v.add(d);
-        }
-    }
 }

@@ -30,25 +30,18 @@ public class ColorPickerComponent extends RectangleComponent
     private double margin = 10;
 
     public ColorPickerComponent(double w, double h) {
-        this(new Vector2d(0, 0), new Vector2d(w, h), 0, 1, 1);
+        this(new Vector2d(0, 0), w, h, 0, 1, 1);
     }
 
-    public ColorPickerComponent(Vector2d topLeft, double width, double height, double h, double s, double v) {
-        this(topLeft, new Vector2d(topLeft.x + width, topLeft.y + height), h, s, v);
-    }
-
-    public ColorPickerComponent(Vector2d topLeft, Vector2d bottomRight, double h, double s, double v) {
-        super(topLeft, bottomRight, HSVtoRGB(h, s, v));
+    public ColorPickerComponent(Vector2d translate, double width, double height, double h, double s, double v) {
+        super(translate, width, height, HSVtoRGB(h, s, v));
         this.h = h;
         this.s = s;
         this.v = v;
     }
 
     private double getSize() {
-        double width = bottomRight.x - topLeft.x;
-        double height = bottomRight.y - topLeft.y;
-
-        return Math.min(width, height);
+        return Math.min(dimension.x, dimension.y);
     }
 
     private double getCircleWidth() {
@@ -61,10 +54,6 @@ public class ColorPickerComponent extends RectangleComponent
 
     private double getInnerRadius() {
         return getOuterRadius() - getCircleWidth();
-    }
-
-    private Vector2d getCenter() {
-        return new Vector2d((topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2);
     }
 
     @Override

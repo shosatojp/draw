@@ -106,9 +106,4 @@ public abstract class FigureComponent extends BasicComponent implements IFigure,
     public BoundingBox getBB() {
         return null;
     }
-
-    @Override
-    public void translate(Vector2d d) {
-        return;
-    }
 }

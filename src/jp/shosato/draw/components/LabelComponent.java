@@ -7,6 +7,7 @@ import org.lwjgl.BufferUtils;
 
 import jp.shosato.draw.utils.Colors;
 import jp.shosato.draw.utils.SingleValueObservable;
+import jp.shosato.draw.utils.Utility;
 
 import static org.lwjgl.opengl.GL15.*;
 import java.awt.Color;
@@ -31,19 +32,19 @@ public class LabelComponent extends RectangleComponent {
     }
 
     public LabelComponent(double w, double h) {
-        this(new Vector2d(0, 0), new Vector2d(w, h), new Vector4d(Colors.GRAY), "");
+        this(new Vector2d(0, 0), w, h, new Vector4d(Colors.GRAY), "");
     }
 
     public LabelComponent(double w, double h, String text) {
-        this(new Vector2d(0, 0), new Vector2d(w, h), new Vector4d(Colors.GRAY), text);
+        this(new Vector2d(0, 0), w, h, new Vector4d(Colors.GRAY), text);
     }
 
-    public LabelComponent(Vector2d topLeft, double w, double h, Vector4d color) {
-        this(topLeft, new Vector2d(topLeft.x + w, topLeft.y + h), color, "");
+    public LabelComponent(Vector2d translate, double w, double h, Vector4d color) {
+        this(translate, w, h, color, "");
     }
 
-    public LabelComponent(Vector2d topLeft, Vector2d bottomRight, Vector4d color, String text) {
-        super(topLeft, bottomRight, color);
+    public LabelComponent(Vector2d translate, double w, double h, Vector4d color, String text) {
+        super(translate, w, h, color);
         textureId = glGenTextures();
         this.setText(text);
     }
@@ -55,13 +56,21 @@ public class LabelComponent extends RectangleComponent {
         if (text == null || textDimension == null)
             return;
 
+        glPushMatrix();
+        Utility.glTransform(dimension, translate, scale, rotate);
+        drawText();
+
+        glPopMatrix();
+    }
+
+    public void drawText() {
         glBindTexture(GL_TEXTURE_2D, this.textureId);
         glEnable(GL_TEXTURE_2D);
-        glPushMatrix();
 
         int w = this.textDimension.x, h = this.textDimension.y;
         Vector2d textTopLeft = getTextTopLeft(w, h);
-        glTranslated(topLeft.x + textTopLeft.x, topLeft.y + textTopLeft.y, 0);
+        glPushMatrix();
+        glTranslated(textTopLeft.x, textTopLeft.y, 0);
 
         glBegin(GL_QUADS);
 
@@ -81,7 +90,6 @@ public class LabelComponent extends RectangleComponent {
 
         glPopMatrix();
         glDisable(GL_TEXTURE_2D);
-
     }
 
     public void setText(String text) {
@@ -116,9 +124,7 @@ public class LabelComponent extends RectangleComponent {
     protected Vector2d getTextTopLeft(int w, int h) {
         switch (alignment) {
             case CENTER: {
-                double _w = bottomRight.x - topLeft.x;
-                double _h = bottomRight.y - topLeft.y;
-                return new Vector2d((_w - w) / 2, (_h - h) / 2);
+                return new Vector2d((dimension.x - w) / 2, (dimension.y - h) / 2);
             }
             default:
                 return new Vector2d(0, 0);

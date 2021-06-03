@@ -9,6 +9,7 @@ import jp.shosato.draw.components.ColorPickerComponent;
 import jp.shosato.draw.components.HorizontalContainerComponent;
 import jp.shosato.draw.components.InputComponent;
 import jp.shosato.draw.components.LabelComponent;
+import jp.shosato.draw.components.RectangleComponent;
 import jp.shosato.draw.components.VerticalContainerComponent;
 import jp.shosato.draw.components.figures.FreeLineFigure;
 import jp.shosato.draw.components.figures.PolygonFigure;
@@ -46,10 +47,26 @@ class Main {
         window.setRootComponent(root);
 
         // ウィンドウの組み立て
+        // createWindowTest(root);
         createWindow(root);
+        // root.translate.add(100, 100);
 
         // 描画・イベントループ
         window.loop();
+    }
+
+    private void createWindowTest(RootComponent root) {
+        // RectangleComponent rect = new RectangleComponent(100, 200, Colors.WHITE);
+        ButtonComponent rect = new ButtonComponent(100, 200, "hoge");
+        // rect.rotate = 45;
+        rect.translate = new Vector2d(100, 100);
+        // LabelComponent rect = new LabelComponent(100, 200, "hoge");
+        VerticalContainerComponent v = new VerticalContainerComponent(new Vector2d(100, 100), 300, 300, Colors.WHITE);
+        v.rotate = 45;
+
+        v.addChildComponent(rect);
+        // rect.scale = new Vector2d(2, 2);
+        root.addChildComponent(v);
     }
 
     private void createWindow(RootComponent root) {

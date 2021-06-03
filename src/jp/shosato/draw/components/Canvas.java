@@ -29,19 +29,15 @@ public class Canvas extends RectangleComponent
     private HashMap<Tool, Boolean> tools = new HashMap<Tool, Boolean>();
 
     public Canvas(double w, double h) {
-        this(new Vector2d(0, 0), new Vector2d(w, h), new Vector4d(Colors.GRAY));
+        this(new Vector2d(0, 0), w, h, Colors.GRAY);
     }
 
     public Canvas(double w, double h, Vector4d color) {
-        this(new Vector2d(0, 0), new Vector2d(w, h), color);
+        this(new Vector2d(0, 0), w, h, color);
     }
 
-    public Canvas(Vector2d topLeft, double w, double h, Vector4d color) {
-        this(topLeft, new Vector2d(topLeft.x + w, topLeft.y + h), color);
-    }
-
-    public Canvas(Vector2d topLeft, Vector2d bottomRight, Vector4d color) {
-        super(topLeft, bottomRight, color);
+    public Canvas(Vector2d translated, double w, double h, Vector4d color) {
+        super(translated, w, h, color);
     }
 
     public void setTools(HashMap<Tool, Boolean> tools) {
@@ -51,8 +47,7 @@ public class Canvas extends RectangleComponent
     @Override
     public void draw() {
         glEnable(GL_SCISSOR_TEST);
-        glScissor((int) this.topLeft.x, (int) this.topLeft.y, (int) (this.bottomRight.x - this.topLeft.x),
-                (int) (this.bottomRight.y - this.topLeft.y));
+        glScissor(0, 0, (int) dimension.x, (int) dimension.y);
         glPushMatrix();
 
         // glTranslated(-this.topLeft.x, -this.topLeft.y, 0);

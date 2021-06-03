@@ -13,15 +13,8 @@ public class VerticalContainerComponent extends RectangleComponent {
         this(new Vector2d(0, 0), w, h, Colors.GRAY);
     }
 
-    public VerticalContainerComponent(Vector2d topLeft, double w, double h, Vector4d color) {
-        this(topLeft, new Vector2d(topLeft.x + w, topLeft.y + h), color);
-    }
-
-    public VerticalContainerComponent(Vector2d topLeft, Vector2d bottomRight, Vector4d color) {
-        super(topLeft, bottomRight, color);
-        this.topLeft = new Vector2d(topLeft);
-        this.bottomRight = new Vector2d(bottomRight);
-        this.color = new Vector4d(color);
+    public VerticalContainerComponent(Vector2d translate, double w, double h, Vector4d color) {
+        super(translate, w, h, color);
     }
 
     @Override
@@ -29,14 +22,13 @@ public class VerticalContainerComponent extends RectangleComponent {
 
         assert (child instanceof RectangleComponent);
 
-        double x = this.topLeft.x;
-        double y = this.topLeft.y;
+        double y = 0;
 
         for (BasicComponent _child : getChildren()) {
             y += _child.getBB().getHeight();
         }
 
-        child.translate(new Vector2d(x, y).sub(this.topLeft));
+        child.translate.add(0, y);
         super.addChildComponent(child);
     }
 }
