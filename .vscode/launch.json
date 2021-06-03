@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "run",
+            "request": "launch",
+            "mainClass": "jp.shosato.draw.Main",
+            "projectName": "micropaint",
+            "cwd": "${workspaceFolder}/target",
+            "args": ""
+        }
+    ]
+}
