@@ -38,7 +38,7 @@ public class PolygonFigure extends FigureComponent {
 
     @Override
     public void draw() {
-        // fill
+        /* fill */
         if (fillColor != null) {
             glColor4d(fillColor.x, fillColor.y, fillColor.z, fillColor.w);
             glBegin(GL_POLYGON);
@@ -48,7 +48,7 @@ public class PolygonFigure extends FigureComponent {
             glEnd();
         }
 
-        // stroke
+        /* stroke */
         if (strokeColor != null) {
             glColor4d(strokeColor.x, strokeColor.y, strokeColor.z, strokeColor.w);
             glLineWidth((float) strokeWidth);

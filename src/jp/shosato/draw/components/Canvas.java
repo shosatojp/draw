@@ -17,6 +17,7 @@ import jp.shosato.draw.events.mouse.MouseMoveEventListener;
 import jp.shosato.draw.tools.MoveTool;
 import jp.shosato.draw.tools.Tool;
 import jp.shosato.draw.utils.Colors;
+import jp.shosato.draw.utils.Utility;
 
 import static org.lwjgl.opengl.GL15.*;
 
@@ -25,7 +26,7 @@ import static org.lwjgl.opengl.GL15.*;
  */
 public class Canvas extends RectangleComponent
         implements MouseMoveEventListener, MouseClickEventListener, MouseEnterEventListener, MouseLeaveEventListener {
-    // Tools enable/disable map
+    /* Tools enable/disable map */
     private HashMap<Tool, Boolean> tools = new HashMap<Tool, Boolean>();
 
     public Canvas(double w, double h) {
@@ -46,25 +47,32 @@ public class Canvas extends RectangleComponent
 
     @Override
     public void draw() {
-        glEnable(GL_SCISSOR_TEST);
-        glScissor(0, 0, (int) dimension.x, (int) dimension.y);
         glPushMatrix();
+        Utility.glTransform(dimension, translate, scale, rotate);
+        {
+            glEnable(GL_SCISSOR_TEST);
+            /* TODO: ViewPort座標じゃないといけない */
+            glScissor(0, 0, (int) dimension.x, (int) dimension.y);
 
-        // glTranslated(-this.topLeft.x, -this.topLeft.y, 0);
-        // glScaled(0.5, 0.5, 1);
+            /* キャンバスを描画 */
+            glColor3d(color.x, color.y, color.z);
+            Utility.drawRectangleFill(dimension);
 
-        // 図形を描画
-        super.draw();
-
-        // ツールを描画
-        for (Entry<Tool, Boolean> e : tools.entrySet()) {
-            if (e.getValue()) {
-                e.getKey().draw();
+            /* 図形を描画 */
+            for (BasicComponent child : children) {
+                child.draw();
             }
-        }
 
+            /* ツールを描画 */
+            for (Entry<Tool, Boolean> e : tools.entrySet()) {
+                if (e.getValue()) {
+                    e.getKey().draw();
+                }
+            }
+
+            glDisable(GL_SCISSOR_TEST);
+        }
         glPopMatrix();
-        glDisable(GL_SCISSOR_TEST);
     }
 
     /**

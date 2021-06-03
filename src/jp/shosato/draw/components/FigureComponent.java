@@ -106,4 +106,10 @@ public abstract class FigureComponent extends BasicComponent implements IFigure,
     public BoundingBox getBB() {
         return null;
     }
+
+    @Override
+    public Vector2d getCenter() {
+        /* this is nomeaning because it has no children */
+        return new Vector2d(0, 0);
+    }
 }

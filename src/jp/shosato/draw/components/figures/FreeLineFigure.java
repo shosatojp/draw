@@ -91,12 +91,4 @@ public class FreeLineFigure extends FigureComponent {
     public ArrayList<Vector2d> getVertices() {
         return dots;
     }
-
-    @Override
-    public void translate(Vector2d d) {
-        for (Vector2d dot : dots) {
-            dot.add(d);
-        }
-    }
-
 }

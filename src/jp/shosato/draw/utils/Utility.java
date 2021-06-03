@@ -259,10 +259,5 @@ public class Utility {
         glScaled(scale.x, scale.y, 1);
         glRotated(rotate, 0, 0, -1);
         glTranslated(-dimension.x / 2, -dimension.y / 2, 0);
-        // glTranslated(-dimension.x / 2, -dimension.y / 2, 0);
-        // glRotated(rotate, 0, 0, 1);
-        // glScaled(scale.x, scale.y, 1);
-        // glTranslated(translate.x, translate.y, 0);
-        // glTranslated(dimension.x / 2, dimension.y / 2, 0);
     }
 }

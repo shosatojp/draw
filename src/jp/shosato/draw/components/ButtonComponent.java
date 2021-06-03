@@ -73,7 +73,6 @@ public class ButtonComponent extends LabelComponent implements MouseClickEventLi
 
     @Override
     public void onMouseClicked(MouseEvent event) {
-        System.out.println(event);
         event.cancel();
         switch (event.getButton()) {
             case GLFW_MOUSE_BUTTON_LEFT:
