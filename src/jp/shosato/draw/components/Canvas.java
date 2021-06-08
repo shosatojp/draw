@@ -45,6 +45,16 @@ public class Canvas extends RectangleComponent
         this.tools = tools;
     }
 
+    private Vector2d getViewportCoords() {
+        Vector2d result = new Vector2d(this.translate);
+        BasicComponent p = this;
+        while (p.parent != null) {
+            p = p.parent;
+            result.add(p.translate);
+        }
+        return result;
+    }
+
     @Override
     public void draw() {
         glPushMatrix();
@@ -52,7 +62,8 @@ public class Canvas extends RectangleComponent
         {
             glEnable(GL_SCISSOR_TEST);
             /* TODO: ViewPort座標じゃないといけない */
-            glScissor(0, 0, (int) dimension.x, (int) dimension.y);
+            Vector2d viewport = getViewportCoords();
+            glScissor((int) viewport.x, (int) viewport.y, (int) dimension.x, (int) dimension.y);
 
             /* キャンバスを描画 */
             glColor3d(color.x, color.y, color.z);

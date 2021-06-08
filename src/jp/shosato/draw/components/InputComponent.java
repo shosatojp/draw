@@ -13,6 +13,8 @@ import jp.shosato.draw.events.key.KeyInputEvent;
 import jp.shosato.draw.events.key.KeyInputEventListener;
 import jp.shosato.draw.events.mouse.MouseClickEventListener;
 import jp.shosato.draw.events.mouse.MouseEvent;
+import jp.shosato.draw.utils.Utility;
+
 import static org.lwjgl.opengl.GL15.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -59,10 +61,13 @@ public class InputComponent extends LabelComponent implements CharInputEventList
             if (text == null)
                 return;
 
+            /* draw cursor */
+            glPushMatrix();
+            Utility.glTransform(dimension, translate, scale, rotate);
+            drawText();
             drawCursor(getMetrix(), text);
-
+            glPopMatrix();
         }
-
     }
 
     protected void drawCursor(FontMetrics metrics, String text) {

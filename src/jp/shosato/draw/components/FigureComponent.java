@@ -57,6 +57,8 @@ public abstract class FigureComponent extends BasicComponent implements IFigure,
         this.strokeWidth = width;
     }
 
+    public abstract void move(Vector2d d);
+
     @Override
     public void onMouseClicked(MouseEvent event) {
     }

@@ -106,19 +106,16 @@ public class Controller {
              * [マウスクリックイベント] 辿る子要素をクリック座標がその範囲に含まれているかによって制限
              */
             private void invokeMouseClickIn(BasicComponent component, MouseEvent event, Vector2d relPos) {
-                Vector2d originalPos = new Vector2d(relPos);
-                Vector2d untransformed = Utility.untransform(relPos, component.getCenter(), component.translate,
-                        component.scale, component.rotate);
-                boolean cond = component instanceof MouseClickEventListener;
-
                 // captureing phase
-                if (cond && !event.cancelled()) {
+                if (component instanceof MouseClickEventListener && !event.cancelled()) {
                     event.setCurrentTarget(component);
                     event.setTarget(component);
-                    event.setPos(originalPos);
-                    MouseClickEventListener listener = (MouseClickEventListener) component;
-                    listener.onMouseClicked(event, true);
+                    event.setPos(relPos);
+                    ((MouseClickEventListener) component).onMouseClicked(event, true);
                 }
+
+                Vector2d untransformed = Utility.untransform(relPos, component.getCenter(), component.translate,
+                        component.scale, component.rotate);
                 for (Iterator<BasicComponent> iter = component.getChildren().descendingIterator(); iter.hasNext();) {
                     BasicComponent child = iter.next();
                     // すべての要素に対して
@@ -131,14 +128,10 @@ public class Controller {
                 }
 
                 // bubbling phase
-                // if (cond && !event.cancelled()) {
-                if (event.getTarget() != null && !event.cancelled()) {
-                    if (component instanceof MouseClickEventListener) {
-                        event.setCurrentTarget(component);
-                        event.setPos(originalPos);
-                        MouseClickEventListener listener = (MouseClickEventListener) component;
-                        listener.onMouseClicked(event);
-                    }
+                if (event.getTarget() != null && component instanceof MouseClickEventListener && !event.cancelled()) {
+                    event.setCurrentTarget(component);
+                    event.setPos(relPos);
+                    ((MouseClickEventListener) component).onMouseClicked(event);
                 }
 
                 // マウスクリック時に最深部の要素をフォーカス

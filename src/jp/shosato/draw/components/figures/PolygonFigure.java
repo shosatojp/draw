@@ -101,4 +101,11 @@ public class PolygonFigure extends FigureComponent {
     public ArrayList<Vector2d> getVertices() {
         return vertices;
     }
+
+    @Override
+    public void move(Vector2d d) {
+        for (Vector2d vertex : vertices) {
+            vertex.add(d);
+        }
+    }
 }

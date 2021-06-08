@@ -69,13 +69,13 @@ public class FreeLineFigure extends FigureComponent {
         }
     }
 
-    // TODO
     @Override
     public boolean contains(Vector2d pos) {
         for (int i = 0, length = dots.size(); i < length - 1; i++) {
             double len = pos.distance(dots.get(i));
             double theta = Utility.getAngleRadian(pos, dots.get(i), dots.get(i + 1));
-            if (len * Math.sin(theta) < 10) {
+            if (theta <= Math.PI / 2 && len * Math.sin(theta) < 5
+                    && len * Math.cos(theta) < dots.get(i).distance(dots.get(i + 1))) {
                 return true;
             }
         }
@@ -90,5 +90,12 @@ public class FreeLineFigure extends FigureComponent {
     @Override
     public ArrayList<Vector2d> getVertices() {
         return dots;
+    }
+
+    @Override
+    public void move(Vector2d d) {
+        for (Vector2d dot : dots) {
+            dot.add(d);
+        }
     }
 }
