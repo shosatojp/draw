@@ -3,3 +3,4 @@ target
 *.svg
 .project
 .settings
+.envrc
