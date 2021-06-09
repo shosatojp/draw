@@ -8,22 +8,35 @@ import org.joml.Vector2d;
 import jp.shosato.micropaint.components.BasicComponent;
 import jp.shosato.micropaint.events.mouse.MouseClickEventListener;
 import jp.shosato.micropaint.events.mouse.MouseEvent;
+import jp.shosato.micropaint.events.mouse.MouseEventListener;
 import jp.shosato.micropaint.utils.Runnable;
 import jp.shosato.micropaint.utils.Utility;
 
 public class BasicMouseEventInvoker {
+    /**
+     * イベント発行条件
+     */
     public interface Condition {
         public boolean run(BasicComponent component, Vector2d relPos);
     }
 
+    /**
+     * イベント発行
+     */
     public interface Invoker {
         public void run(BasicComponent component, MouseEvent event, boolean captureing);
     }
 
+    /**
+     * イベント発行前の処理
+     */
     public interface Modifier {
         public void run(BasicComponent component);
     }
 
+    /**
+     * ターゲットに対する処理
+     */
     public interface TargetRunnable {
         public void run(BasicComponent component);
     }
@@ -58,7 +71,9 @@ public class BasicMouseEventInvoker {
     }
 
     public void invoke(BasicComponent component, MouseEvent event, Vector2d relPos) {
-        // captureing phase
+        /**
+         * キャプチャリングフェーズ
+         */
         if (cls.isInstance(component) && !event.cancelled() && cond.run(component, relPos)) {
             if (modifier != null)
                 modifier.run(component);
@@ -68,17 +83,25 @@ public class BasicMouseEventInvoker {
             invoker.run(component, event, true);
         }
 
+        /**
+         * イベント再帰
+         */
+        /* 座標逆変換 */
         Vector2d untransformed = Utility.untransform(relPos, component.getCenter(), component.translate,
                 component.scale, component.rotate);
+        /* 描画順と逆に */
         for (Iterator<BasicComponent> iter = component.getChildren().descendingIterator(); iter.hasNext();) {
             BasicComponent child = iter.next();
             if ((!mustContain || child.contains(untransformed)) && !event.cancelled()) {
                 event.setPos(untransformed);
+                /* 再帰呼び出し */
                 invoke(child, event, untransformed);
             }
         }
 
-        // bubbling phase
+        /**
+         * バブリングフェーズ
+         */
         if (event.getTarget() != null && cls.isInstance(component) && !event.cancelled()) {
             if (modifier != null)
                 modifier.run(component);
@@ -87,7 +110,9 @@ public class BasicMouseEventInvoker {
             invoker.run(component, event, false);
         }
 
-        // マウスクリック時に最深部の要素をフォーカス
+        /**
+         * ターゲット要素に対する処理
+         */
         if (targetRunnable != null && event.getTarget() == component) {
             targetRunnable.run(component);
         }

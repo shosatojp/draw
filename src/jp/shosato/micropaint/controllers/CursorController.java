@@ -1,12 +1,13 @@
 package jp.shosato.micropaint.controllers;
 
+import static org.lwjgl.glfw.GLFW.glfwCreateStandardCursor;
+import static org.lwjgl.glfw.GLFW.glfwSetCursor;
+
 import org.joml.Vector2d;
 
 import jp.shosato.micropaint.components.BasicComponent;
-import jp.shosato.micropaint.components.RootComponent;
 import jp.shosato.micropaint.events.mouse.MouseEvent;
 import jp.shosato.micropaint.utils.Utility;
-import static org.lwjgl.glfw.GLFW.*;
 
 public class CursorController {
 
