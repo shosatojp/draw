@@ -20,18 +20,37 @@ import jp.shosato.draw.utils.IDrawable2D;
 import jp.shosato.draw.utils.Utility;
 
 public abstract class BasicComponent extends Hoverable implements IDrawable2D, IBoundingBox {
+    /**
+     * 縦横
+     */
     public Vector2d dimension = new Vector2d(0, 0);
-
+    /**
+     * 移動
+     */
     public Vector2d translate = new Vector2d(0, 0);
+    /**
+     * 拡大縮小
+     */
     public Vector2d scale = new Vector2d(1, 1);
+    /**
+     * 回転（Z軸）
+     */
     public double rotate = 0;
 
-    // parent/children
     protected Window window;
     protected Controller controller;
+    /**
+     * 親要素
+     */
     protected BasicComponent parent;
+    /**
+     * 子要素
+     */
     protected LinkedList<BasicComponent> children = new LinkedList<>();
 
+    /**
+     * 子要素を追加。親要素やウィンドウの情報を設定
+     */
     public void addChildComponent(BasicComponent child) {
         child.parent = this;
         child.controller = this.controller;
@@ -64,8 +83,14 @@ public abstract class BasicComponent extends Hoverable implements IDrawable2D, I
         return parent;
     }
 
+    /**
+     * 中央の座標
+     */
     public abstract Vector2d getCenter();
 
+    /**
+     * 変形を適用してから子要素を再帰的に描画
+     */
     @Override
     public void draw() {
         glPushMatrix();

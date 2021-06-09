@@ -25,10 +25,16 @@ import jp.shosato.draw.utils.Utility;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class ButtonComponent extends LabelComponent implements MouseClickEventListener, MouseMoveEventListener,
-        MouseEnterEventListener, MouseLeaveEventListener, FocusInEventListener, KeyInputEventListener {
+        MouseEnterEventListener, MouseLeaveEventListener {
 
+    /**
+     * クリック状態
+     */
     private boolean pressed = false;
 
+    /**
+     * ボタンクリックイベントハンドラ
+     */
     public EventHandler<ButtonClickedEventHandler> onButtonClicked = new EventHandler<>();
 
     private static Vector4d buttonDefaultColor = new Vector4d(0.8f, 0.8f, 0.8f, 1f);
@@ -46,7 +52,9 @@ public class ButtonComponent extends LabelComponent implements MouseClickEventLi
 
     @Override
     public void draw() {
-
+        /**
+         * ホバーやクリックの状況で色を変更
+         */
         if (this.pressed) {
             this.color = buttonPressedColor;
         } else if (this.getHovered()) {
@@ -55,25 +63,32 @@ public class ButtonComponent extends LabelComponent implements MouseClickEventLi
             this.color = buttonDefaultColor;
         }
 
+        /* 座標換 */
         glPushMatrix();
         Utility.glTransform(dimension, translate, scale, rotate);
+        {
+            /* 縁を描画 */
+            glColor4d(color.x, color.y, color.z, 1f);
+            Utility.drawRectangleFill(dimension);
 
-        glColor4d(color.x, color.y, color.z, 1f);
-        Utility.drawRectangleFill(dimension);
-        double margin = 2;
+            /* ボタンを描画 */
+            final double margin = 2;
+            glPushMatrix();
+            glTranslated(margin / 2, margin / 2, 0);
+            Utility.drawRectangleFill(new Vector2d(dimension).sub(margin, margin));
+            glPopMatrix();
 
-        glPushMatrix();
-        glTranslated(margin / 2, margin / 2, 0);
-        Utility.drawRectangleFill(new Vector2d(dimension).sub(margin, margin));
-        glPopMatrix();
-
-        drawText();
+            /* テキストを描画 */
+            drawText();
+        }
         glPopMatrix();
     }
 
     @Override
     public void onMouseClicked(MouseEvent event) {
+        /* ボタンはクリックイベントをバブルアップさせない */
         event.cancel();
+
         switch (event.getButton()) {
             case GLFW_MOUSE_BUTTON_LEFT:
                 switch (event.getAction()) {
@@ -82,6 +97,7 @@ public class ButtonComponent extends LabelComponent implements MouseClickEventLi
                         break;
                     case GLFW_RELEASE:
                         if (this.pressed) {
+                            /* ボタンクリック時にイベントを発行 */
                             onButtonClicked.invoke(new ButtonClickedEvent());
                         }
                         this.pressed = false;
@@ -122,17 +138,5 @@ public class ButtonComponent extends LabelComponent implements MouseClickEventLi
 
     @Override
     public void onMouseLeave(MouseEvent event, boolean captureing) {
-    }
-
-    @Override
-    public void onFocusIn(FocusInEvent event) {
-    }
-
-    @Override
-    public void onKeyInput(KeyInputEvent event) {
-        if (event.action == GLFW_PRESS) {
-            String text = this.getText().concat(String.valueOf((char) event.key));
-            this.setText(text);
-        }
     }
 }

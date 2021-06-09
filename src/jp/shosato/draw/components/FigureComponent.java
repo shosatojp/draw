@@ -20,6 +20,9 @@ import jp.shosato.draw.utils.IBoundingBox;
 public abstract class FigureComponent extends BasicComponent implements IFigure, MouseClickEventListener,
         MouseEnterEventListener, MouseLeaveEventListener, MouseMoveEventListener {
 
+    /**
+     * 描画終了イベントハンドラ
+     */
     public EventHandler<FinishDrawingHandler> onFinished = new EventHandler<>();
 
     protected Vector4d fillColor = new Vector4d(1, 1, 1, 1);
@@ -57,6 +60,7 @@ public abstract class FigureComponent extends BasicComponent implements IFigure,
         this.strokeWidth = width;
     }
 
+    /* dだけ移動 */
     public abstract void move(Vector2d d);
 
     @Override
@@ -97,16 +101,6 @@ public abstract class FigureComponent extends BasicComponent implements IFigure,
 
     @Override
     public void onMouseMoveDrawing(Canvas canvas, MouseEvent event) {
-    }
-
-    @Override
-    public boolean contains(Vector2d pos) {
-        return false;
-    }
-
-    @Override
-    public BoundingBox getBB() {
-        return null;
     }
 
     @Override

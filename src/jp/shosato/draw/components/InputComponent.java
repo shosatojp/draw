@@ -32,10 +32,19 @@ import org.joml.Vector4d;
 public class InputComponent extends LabelComponent implements CharInputEventListener, FocusInEventListener,
         MouseClickEventListener, KeyInputEventListener, FocusOutEventListener {
 
+    /**
+     * テキスト変更イベントハンドラ
+     */
     public EventHandler<TextInputEventHandler> onTextChanged = new EventHandler<>();
+    /**
+     * テキストインプットイベントハンドラ
+     */
     public EventHandler<TextInputEventHandler> onTextInput = new EventHandler<>();
 
     private int age = 0;
+    /**
+     * カーソル位置
+     */
     private int cursorPosition = 0;
     private boolean hasFocus = false;
 
@@ -61,11 +70,15 @@ public class InputComponent extends LabelComponent implements CharInputEventList
             if (text == null)
                 return;
 
-            /* draw cursor */
             glPushMatrix();
             Utility.glTransform(dimension, translate, scale, rotate);
-            drawText();
-            drawCursor(getMetrix(), text);
+            {
+                /* テキストを描画 */
+                drawText();
+
+                /* カーソルを描画 */
+                drawCursor(getMetrix(), text);
+            }
             glPopMatrix();
         }
     }
@@ -73,13 +86,18 @@ public class InputComponent extends LabelComponent implements CharInputEventList
     protected void drawCursor(FontMetrics metrics, String text) {
         glPushMatrix();
 
+        /* 文字の左端からカーソルまでの距離 */
         int cursorW = metrics.stringWidth(text.substring(0, this.cursorPosition));
+        /* テキストの幅 */
         int w = metrics.stringWidth(text);
+        /* テキストの高さ */
         int h = metrics.getHeight();
 
+        /* テキストの左上座標 */
         Vector2d textTopLeft = getTextTopLeft(w, h);
         glTranslated(textTopLeft.x, textTopLeft.y, 0);
 
+        /* カーソルの描画 */
         glLineWidth(2);
         glColor4d(0, 0, 0, 1);
         glBegin(GL_LINES);
@@ -90,6 +108,10 @@ public class InputComponent extends LabelComponent implements CharInputEventList
         glPopMatrix();
     }
 
+    /**
+     * 文字の入力
+     * BSやDelete時は呼ばれない
+     */
     @Override
     public void onCharInput(CharInputEvent event) {
         int code = event.codepoint;
@@ -115,6 +137,9 @@ public class InputComponent extends LabelComponent implements CharInputEventList
         onTextChanged.invoke(new TextInputEvent(sb.toString()));
     }
 
+    /**
+     * キーの入力
+     */
     @Override
     public void onKeyInput(KeyInputEvent event) {
         if (event.action == GLFW_PRESS) {
@@ -148,6 +173,7 @@ public class InputComponent extends LabelComponent implements CharInputEventList
                     this.cursorPosition = chars.size();
                     return;
                 case GLFW_KEY_ENTER:
+                    /* Enterでテキストインプットイベント発行 */
                     this.onTextInput.invoke(new TextInputEvent(text));
                     return;
                 default:

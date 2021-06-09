@@ -26,7 +26,9 @@ import static org.lwjgl.opengl.GL15.*;
  */
 public class Canvas extends RectangleComponent
         implements MouseMoveEventListener, MouseClickEventListener, MouseEnterEventListener, MouseLeaveEventListener {
-    /* Tools enable/disable map */
+    /**
+     * ツールの有効・無効化リスト
+     */
     private HashMap<Tool, Boolean> tools = new HashMap<Tool, Boolean>();
 
     public Canvas(double w, double h) {
@@ -45,6 +47,9 @@ public class Canvas extends RectangleComponent
         this.tools = tools;
     }
 
+    /**
+     * ビューポート座標を簡易的に計算
+     */
     private Vector2d getViewportCoords() {
         Vector2d result = new Vector2d(this.translate);
         BasicComponent p = this;
@@ -60,8 +65,11 @@ public class Canvas extends RectangleComponent
         glPushMatrix();
         Utility.glTransform(dimension, translate, scale, rotate);
         {
+            /**
+             * フレームバッファに書き込む領域を制限
+             * 図形がキャンバス外に行かないように
+             */
             glEnable(GL_SCISSOR_TEST);
-            /* TODO: ViewPort座標じゃないといけない */
             Vector2d viewport = getViewportCoords();
             glScissor((int) viewport.x, (int) viewport.y, (int) dimension.x, (int) dimension.y);
 

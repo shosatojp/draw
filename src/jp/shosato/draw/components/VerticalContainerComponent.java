@@ -7,6 +7,9 @@ import org.joml.Vector4d;
 
 import jp.shosato.draw.utils.Colors;
 
+/**
+ * 垂直に並べるコンテナ要素
+ */
 public class VerticalContainerComponent extends RectangleComponent {
 
     public VerticalContainerComponent(double w, double h) {
@@ -22,11 +25,8 @@ public class VerticalContainerComponent extends RectangleComponent {
 
         assert (child instanceof RectangleComponent);
 
-        double y = 0;
-
-        for (BasicComponent _child : getChildren()) {
-            y += _child.getBB().getHeight();
-        }
+        double y = getChildren().stream().map((BasicComponent _child) -> _child.getBB().getHeight())
+                .mapToDouble(Double::doubleValue).sum();
 
         child.translate.add(0, y);
         super.addChildComponent(child);

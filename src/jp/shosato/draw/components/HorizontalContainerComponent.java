@@ -22,11 +22,8 @@ public class HorizontalContainerComponent extends RectangleComponent {
 
         assert (child instanceof RectangleComponent);
 
-        double x = 0;
-
-        for (BasicComponent _child : getChildren()) {
-            x += _child.getBB().getWidth();
-        }
+        double x = getChildren().stream().map((BasicComponent _child) -> _child.getBB().getWidth())
+                .mapToDouble(Double::doubleValue).sum();
 
         child.translate.add(x, 0);
         super.addChildComponent(child);

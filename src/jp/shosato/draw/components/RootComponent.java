@@ -6,6 +6,9 @@ import jp.shosato.draw.Controller;
 import jp.shosato.draw.Window;
 import jp.shosato.draw.utils.BoundingBox;
 
+/**
+ * GUIのルート要素
+ */
 public class RootComponent extends BasicComponent {
 
     public RootComponent(Window window, Controller controller) {
@@ -15,6 +18,9 @@ public class RootComponent extends BasicComponent {
         this.parent = null;
     }
 
+    /**
+     * どんな座標も含まれているものとする
+     */
     @Override
     public boolean contains(Vector2d pos) {
         return true;
