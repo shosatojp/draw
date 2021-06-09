@@ -2,8 +2,8 @@ package jp.shosato.micropaint.components;
 
 import org.joml.Vector2d;
 
-import jp.shosato.micropaint.Controller;
 import jp.shosato.micropaint.Window;
+import jp.shosato.micropaint.controllers.Controller;
 import jp.shosato.micropaint.utils.BoundingBox;
 
 /**

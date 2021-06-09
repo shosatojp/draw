@@ -10,8 +10,8 @@ import java.util.LinkedList;
 
 import org.joml.Vector2d;
 
-import jp.shosato.micropaint.Controller;
 import jp.shosato.micropaint.Window;
+import jp.shosato.micropaint.controllers.Controller;
 import jp.shosato.micropaint.events.Event;
 import jp.shosato.micropaint.utils.BoundingBox;
 import jp.shosato.micropaint.utils.Hoverable;
