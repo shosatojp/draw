@@ -4,11 +4,15 @@ import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
+
+import java.util.Vector;
 
 import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFWCharCallbackI;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallbackI;
 
 import jp.shosato.micropaint.components.BasicComponent;
 import jp.shosato.micropaint.events.key.CharInputEvent;
@@ -27,6 +31,7 @@ public class Controller {
     private MouseController mouseController = new MouseController(focusController);
     private KeyController keyController = new KeyController();
     private CursorController cursorController = new CursorController();
+    private ScrollController scrollController = new ScrollController();
 
     public void setRootComponent(BasicComponent root) {
         this.rootComponent = root;
@@ -51,9 +56,9 @@ public class Controller {
                 pos = new Vector2d(x, y);
 
                 if (rootComponent != null) {
-                    mouseController.mouseMoveEventInvoker.invoke(rootComponent, new MouseEvent(pos, 0, 0, 0), pos);
-                    mouseController.mouseLeaveEventInvoker.invoke(rootComponent, new MouseEvent(pos, 0, 0, 0), pos);
-                    mouseController.mouseEnterEventInvoker.invoke(rootComponent, new MouseEvent(pos, 0, 0, 0), pos);
+                    mouseController.mouseMoveEventInvoker.invoke(rootComponent, new MouseEvent(pos), pos);
+                    mouseController.mouseLeaveEventInvoker.invoke(rootComponent, new MouseEvent(pos), pos);
+                    mouseController.mouseEnterEventInvoker.invoke(rootComponent, new MouseEvent(pos), pos);
                     cursorController.setCursor(window, rootComponent, pos);
                 }
             }
@@ -72,6 +77,16 @@ public class Controller {
                 if (focusController.getFocused() != null) {
                     CharInputEvent event = new CharInputEvent(window, codepoint);
                     keyController.invokeCharInputEvent(focusController.getFocused(), event);
+                }
+            }
+        });
+
+        glfwSetScrollCallback(_window, new GLFWScrollCallbackI() {
+            @Override
+            public void invoke(long arg0, double x, double y) {
+                if (rootComponent != null) {
+                    scrollController.scrollEventInvoker.invoke(rootComponent,
+                            new MouseEvent(pos, new Vector2d(x, y)), pos);
                 }
             }
         });

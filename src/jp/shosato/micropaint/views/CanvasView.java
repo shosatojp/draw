@@ -3,13 +3,16 @@ package jp.shosato.micropaint.views;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.joml.Vector2d;
 import org.joml.Vector4d;
 
 import jp.shosato.micropaint.components.Canvas;
 import jp.shosato.micropaint.components.FigureComponent;
 import jp.shosato.micropaint.components.HorizontalContainerComponent;
 import jp.shosato.micropaint.events.Event;
+import jp.shosato.micropaint.events.handlers.ScrolledEvent;
 import jp.shosato.micropaint.events.handlers.SelectionChangedEvent;
+import jp.shosato.micropaint.models.CanvasModel;
 import jp.shosato.micropaint.models.ColorModel;
 import jp.shosato.micropaint.models.CurrentFigureModel;
 import jp.shosato.micropaint.models.SelectionModel;
@@ -42,7 +45,7 @@ public class CanvasView extends HorizontalContainerComponent {
      * Canvasの子要素となっているので描画されている図形に関するModelは持たない。
      */
     public CanvasView(ToolModel toolModel, SelectionModel selectionModel, CurrentFigureModel currentFigureModel,
-            ColorModel colorPanelModel, StrokeWidthModel strokeWidthModel) {
+            ColorModel colorPanelModel, CanvasModel canvasModel, StrokeWidthModel strokeWidthModel) {
         super(700, 700);
 
         this.toolModel = toolModel;
@@ -96,10 +99,26 @@ public class CanvasView extends HorizontalContainerComponent {
                 currentFigureModel.currentFigure.getValue().first.setStrokeWidth(width);
             }
         });
+        canvasModel.canvasScale.addObserver((Vector2d canvasScale) -> {
+            canvas.canvasScale = canvasScale;
+        });
 
         // EventHandlers
         selectTool.onSelectionChanged.addEventHandler((SelectionChangedEvent event) -> {
             this.selectionModel.change(event);
+        });
+        canvas.onScrolled.addEventHandler((ScrolledEvent event) -> {
+            int sign = (int) (event.offset / Math.abs(event.offset));
+            switch (event.direction) {
+                case SCALE: {
+                    Vector2d nextScale = new Vector2d(canvasModel.canvasScale.getValue()).add(sign * 0.05, sign * 0.05);
+                    if (nextScale.x > 0 && nextScale.y > 0)
+                        canvasModel.canvasScale.setValue(new Vector2d(nextScale));
+                }
+                    break;
+                default:
+                    break;
+            }
         });
     }
 }

@@ -19,6 +19,7 @@ import jp.shosato.micropaint.controllers.Controller;
 import jp.shosato.micropaint.events.handlers.ButtonClickedEvent;
 import jp.shosato.micropaint.events.handlers.ColorChangedEvent;
 import jp.shosato.micropaint.events.handlers.TextInputEvent;
+import jp.shosato.micropaint.models.CanvasModel;
 import jp.shosato.micropaint.models.ColorModel;
 import jp.shosato.micropaint.models.CurrentFigureModel;
 import jp.shosato.micropaint.models.SelectionModel;
@@ -62,13 +63,14 @@ class Main {
         ToolModel toolModel = new ToolModel();
         SelectionModel selectionModel = new SelectionModel();
         CurrentFigureModel currentFigureModel = new CurrentFigureModel();
+        CanvasModel canvasModel = new CanvasModel();
 
         // Views/Controllers
         ColorPanelView colorPanelView = new ColorPanelView(colorPanelModel);
         CanvasView canvasView = new CanvasView(toolModel, selectionModel, currentFigureModel, colorPanelModel,
-                strokeWidthModel);
+                canvasModel, strokeWidthModel);
         ButtonsView buttonsView = new ButtonsView(toolModel, colorPanelModel, strokeWidthModel, currentFigureModel,
-                canvasView);
+                canvasModel, canvasView);
 
         //
         HorizontalContainerComponent hstack = new HorizontalContainerComponent(window.getWidth(), window.getHeight());

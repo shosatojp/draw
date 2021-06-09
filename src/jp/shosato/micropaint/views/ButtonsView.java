@@ -2,12 +2,16 @@ package jp.shosato.micropaint.views;
 
 import static org.lwjgl.opengl.GL.*;
 
+import org.joml.Vector2d;
+
 import jp.shosato.micropaint.components.ButtonComponent;
 import jp.shosato.micropaint.components.FigureComponent;
+import jp.shosato.micropaint.components.LabelComponent;
 import jp.shosato.micropaint.components.VerticalContainerComponent;
 import jp.shosato.micropaint.components.figures.*;
 import jp.shosato.micropaint.events.NextDrawingListener;
 import jp.shosato.micropaint.events.handlers.ButtonClickedEvent;
+import jp.shosato.micropaint.models.CanvasModel;
 import jp.shosato.micropaint.models.ColorModel;
 import jp.shosato.micropaint.models.CurrentFigureModel;
 import jp.shosato.micropaint.models.StrokeWidthModel;
@@ -27,9 +31,12 @@ public class ButtonsView extends VerticalContainerComponent {
     private final ButtonComponent freelineButton;
     private final ButtonComponent clearButton;
     private final StrokeWidthView strokeWidthView;
+    private final ButtonComponent canvasZoominButton;
+    private final ButtonComponent canvasZoomoutButton;
+    private final LabelComponent zoomLabel;
 
     public ButtonsView(ToolModel toolModel, ColorModel colorPanelModel, StrokeWidthModel strokeWidthModel,
-            CurrentFigureModel currentFigureModel, CanvasView canvasView) {
+            CurrentFigureModel currentFigureModel, CanvasModel canvasModel, CanvasView canvasView) {
         super(100, 700);
 
         // Construct View
@@ -40,6 +47,10 @@ public class ButtonsView extends VerticalContainerComponent {
         clearButton = new ButtonComponent(70, 40, "白紙");
         freelineButton = new ButtonComponent(70, 40, "ペン");
         strokeWidthView = new StrokeWidthView(strokeWidthModel);
+        canvasZoominButton = new ButtonComponent(70, 40, "+");
+        canvasZoomoutButton = new ButtonComponent(70, 40, "-");
+        zoomLabel = new LabelComponent(70, 40,
+                String.valueOf((int) (canvasModel.canvasScale.getValue().x * 100)) + "%");
 
         this.addChildComponent(selectButton);
         this.addChildComponent(moveButton);
@@ -48,6 +59,14 @@ public class ButtonsView extends VerticalContainerComponent {
         this.addChildComponent(freelineButton);
         this.addChildComponent(clearButton);
         this.addChildComponent(strokeWidthView);
+        this.addChildComponent(canvasZoominButton);
+        this.addChildComponent(canvasZoomoutButton);
+        this.addChildComponent(zoomLabel);
+
+        // Observer
+        canvasModel.canvasScale.addObserver((Vector2d scale) -> {
+            zoomLabel.setText(String.valueOf((int) (canvasModel.canvasScale.getValue().x * 100)) + "%");
+        });
 
         // EventHandlers
         selectButton.onButtonClicked
@@ -72,6 +91,14 @@ public class ButtonsView extends VerticalContainerComponent {
         });
         clearButton.onButtonClicked.addEventHandler((ButtonClickedEvent event) -> {
             canvasView.canvas.removeChildren();
+        });
+        canvasZoominButton.onButtonClicked.addEventHandler((ButtonClickedEvent event) -> {
+            canvasModel.canvasScale.setValue(new Vector2d(canvasModel.canvasScale.getValue()).add(0.1, 0.1));
+        });
+        canvasZoomoutButton.onButtonClicked.addEventHandler((ButtonClickedEvent event) -> {
+            Vector2d nextScale = new Vector2d(canvasModel.canvasScale.getValue()).sub(0.1, 0.1);
+            if (nextScale.x > 0.1 && nextScale.y > 0.1)
+                canvasModel.canvasScale.setValue(new Vector2d(nextScale));
         });
 
         ButtonComponent screenshot = new ButtonComponent(70, 40, "保存");
