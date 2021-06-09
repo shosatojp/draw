@@ -5,7 +5,7 @@
             "type": "java",
             "name": "run",
             "request": "launch",
-            "mainClass": "jp.shosato.draw.Main",
+            "mainClass": "jp.shosato.micropaint.Main",
             "projectName": "micropaint",
             "cwd": "${workspaceFolder}/target",
             "args": ""
