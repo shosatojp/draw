@@ -8,6 +8,7 @@ import org.joml.Vector4d;
 import jp.shosato.draw.components.Canvas;
 import jp.shosato.draw.components.FigureComponent;
 import jp.shosato.draw.components.HorizontalContainerComponent;
+import jp.shosato.draw.components.RectangleComponent;
 import jp.shosato.draw.events.Event;
 import jp.shosato.draw.events.handlers.SelectionChangedEvent;
 import jp.shosato.draw.models.ColorModel;
@@ -27,6 +28,7 @@ import jp.shosato.draw.utils.SingleValueObservable;
 public class CanvasView extends HorizontalContainerComponent {
 
     public final Canvas canvas;
+    public final RectangleComponent innerCanvas;
     public final SelectTool selectTool;
     public final DrawTool drawTool;
     public final MoveTool moveTool;
@@ -51,7 +53,10 @@ public class CanvasView extends HorizontalContainerComponent {
         this.colorPanelModel = colorPanelModel;
         this.strokeWidthModel = strokeWidthModel;
 
-        canvas = new Canvas(700, 700, Colors.WHITE);
+        canvas = new Canvas(700, 700, Colors.BLACK);
+        innerCanvas = new RectangleComponent(700, 700, Colors.WHITE);
+        canvas.addChildComponent(innerCanvas);
+
         drawTool = new DrawTool(canvas);
         selectTool = new SelectTool(canvas);
         moveTool = new MoveTool(canvas, selectTool);
@@ -67,7 +72,7 @@ public class CanvasView extends HorizontalContainerComponent {
             this.selectTool.setSelectedFigures(selected);
         });
         this.toolModel.tools.addObserver((HashMap<Tool, Boolean> tools) -> {
-            this.canvas.setTools(tools);
+            canvas.setTools(tools);
         });
         this.currentFigureModel.currentFigure.addObserver((Pair<FigureComponent, Runnable<FigureComponent>> pair) -> {
             if (pair != null) {
@@ -75,7 +80,7 @@ public class CanvasView extends HorizontalContainerComponent {
                 pair.first.onFinished.addEventHandler((Event event) -> {
                     SingleValueObservable<Pair<FigureComponent, Runnable<FigureComponent>>> current = currentFigureModel.currentFigure;
                     if (current.hasValue()) {
-                        canvas.addChildComponent(current.getValue().first);
+                        innerCanvas.addChildComponent(current.getValue().first);
                         current.setValue(new Pair<>(current.getValue().second.run(), current.getValue().second));
                     }
                 });

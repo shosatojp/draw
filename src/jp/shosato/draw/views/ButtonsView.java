@@ -71,7 +71,7 @@ public class ButtonsView extends VerticalContainerComponent {
             currentFigureModel.currentFigure.setValue(new Pair<>(generator.run(), generator));
         });
         clearButton.onButtonClicked.addEventHandler((ButtonClickedEvent event) -> {
-            canvasView.canvas.removeChildren();
+            canvasView.innerCanvas.removeChildren();
         });
 
         ButtonComponent screenshot = new ButtonComponent(70, 40, "保存");

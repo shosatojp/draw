@@ -61,25 +61,28 @@ public class Canvas extends RectangleComponent
         Utility.glTransform(dimension, translate, scale, rotate);
         {
             glEnable(GL_SCISSOR_TEST);
-            /* TODO: ViewPort座標じゃないといけない */
             Vector2d viewport = getViewportCoords();
             glScissor((int) viewport.x, (int) viewport.y, (int) dimension.x, (int) dimension.y);
 
-            /* キャンバスを描画 */
-            glColor3d(color.x, color.y, color.z);
+            glColor4d(color.x, color.y, color.z, color.w);
             Utility.drawRectangleFill(dimension);
 
             /* 図形を描画 */
             for (BasicComponent child : children) {
+                child.scale = new Vector2d(2, 2);
                 child.draw();
             }
 
             /* ツールを描画 */
+            glPushMatrix();
+            Utility.glTransform(dimension, translate, new Vector2d(2, 2), rotate);
             for (Entry<Tool, Boolean> e : tools.entrySet()) {
                 if (e.getValue()) {
                     e.getKey().draw();
                 }
             }
+
+            glPopMatrix();
 
             glDisable(GL_SCISSOR_TEST);
         }
