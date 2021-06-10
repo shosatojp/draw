@@ -7,4 +7,5 @@ import jp.shosato.micropaint.utils.SingleValueObservable;
 public class CanvasModel {
     public SingleValueObservable<Vector2d> canvasScale = new SingleValueObservable<>(new Vector2d(1, 1));
     public SingleValueObservable<Vector2d> canvasTranslate = new SingleValueObservable<>(new Vector2d(0, 0));
+    public SingleValueObservable<Vector2d> canvasCenter = new SingleValueObservable<>(new Vector2d(0, 0));
 }

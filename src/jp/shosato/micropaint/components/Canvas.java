@@ -48,6 +48,7 @@ public class Canvas extends RectangleComponent implements MouseMoveEventListener
      */
     public Vector2d canvasScale = new Vector2d(1, 1);
     public Vector2d canvasTranslate = new Vector2d(0, 0);
+    public Vector2d canvasCenter = new Vector2d();
     private Vector4d backgroundColor = new Vector4d(Colors.GRAY);
 
     public Canvas(double w, double h) {
@@ -96,7 +97,7 @@ public class Canvas extends RectangleComponent implements MouseMoveEventListener
             Utility.drawRectangleFill(dimension);
 
             glPushMatrix();
-            Utility.glTransform(dimension, canvasTranslate, canvasScale, 0);
+            Utility.glTransformAt(canvasCenter, canvasTranslate, canvasScale, 0);
             {
                 /* キャンバスを描画 */
                 glColor3d(color.x, color.y, color.z);
@@ -147,7 +148,7 @@ public class Canvas extends RectangleComponent implements MouseMoveEventListener
 
     private void onMouseEvent(MouseEvent event, MouseEventInvoker invoker) {
         Vector2d original = new Vector2d(event.getPos());
-        event.setPos(Utility.untransform(original, getCenter(), canvasTranslate, canvasScale, 0));
+        event.setPos(Utility.untransform(original, canvasCenter, canvasTranslate, canvasScale, 0));
         for (Entry<Tool, Boolean> e : tools.entrySet()) {
             if (e.getValue()) {
                 invoker.invoke(e.getKey(), event);

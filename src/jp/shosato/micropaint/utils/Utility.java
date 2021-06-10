@@ -260,4 +260,12 @@ public class Utility {
         glRotated(rotate, 0, 0, -1);
         glTranslated(-dimension.x / 2, -dimension.y / 2, 0);
     }
+
+    public static void glTransformAt(Vector2d center, Vector2d translate, Vector2d scale, double rotate) {
+        glTranslated(center.x, center.y, 0);
+        glTranslated(translate.x, translate.y, 0);
+        glScaled(scale.x, scale.y, 1);
+        glRotated(rotate, 0, 0, -1);
+        glTranslated(-center.x, -center.y, 0);
+    }
 }

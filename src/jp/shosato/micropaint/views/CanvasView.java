@@ -108,6 +108,9 @@ public class CanvasView extends HorizontalContainerComponent {
         canvasModel.canvasTranslate.addObserver((Vector2d canvasTranslate) -> {
             canvas.canvasTranslate = canvasTranslate;
         });
+        canvasModel.canvasCenter.addObserver((Vector2d canvasCenter) -> {
+            canvas.canvasCenter = canvasCenter;
+        });
 
         // EventHandlers
         selectTool.onSelectionChanged.addEventHandler((SelectionChangedEvent event) -> {
@@ -119,15 +122,9 @@ public class CanvasView extends HorizontalContainerComponent {
                 case SCALE: {
                     Vector2d nextScale = new Vector2d(canvasModel.canvasScale.getValue()).add(sign * SCALE_PER_WHEEL,
                             sign * SCALE_PER_WHEEL);
-                    Vector2d originalPos = Utility.transform(canvas.getCenter(), canvas.getCenter(),
-                            canvas.canvasTranslate, canvas.canvasScale, 0);
-                    Vector2d move = (new Vector2d(originalPos).sub(event.pos)
-                            .mul(SCALE_PER_WHEEL / canvasModel.canvasScale.getValue().x));
                     if (nextScale.x > 0.1 && nextScale.y > 0.1) {
-
                         canvasModel.canvasScale.setValue(new Vector2d(nextScale));
-                        canvasModel.canvasTranslate.setValue(canvasModel.canvasTranslate.getValue().sub(move));
-
+                        canvasModel.canvasCenter.setValue(new Vector2d(event.pos));
                     }
                 }
                     break;
