@@ -114,16 +114,15 @@ public class CanvasView extends HorizontalContainerComponent {
             this.selectionModel.change(event);
         });
         canvas.onScrolled.addEventHandler((ScrolledEvent event) -> {
-            // System.out.println(event.);
             int sign = (int) (event.offset / Math.abs(event.offset));
             switch (event.direction) {
                 case SCALE: {
                     Vector2d nextScale = new Vector2d(canvasModel.canvasScale.getValue()).add(sign * SCALE_PER_WHEEL,
                             sign * SCALE_PER_WHEEL);
-                    Vector2d originalPos = Utility.transform(new Vector2d(),
-                            new Vector2d(canvas.getCenter()).mul(canvas.canvasScale), canvas.canvasTranslate,
-                            canvas.canvasScale, 0);
-                    Vector2d move = (new Vector2d(originalPos).sub(event.pos).mul(SCALE_PER_WHEEL));
+                    Vector2d originalPos = Utility.transform(canvas.getCenter(), canvas.getCenter(),
+                            canvas.canvasTranslate, canvas.canvasScale, 0);
+                    Vector2d move = (new Vector2d(originalPos).sub(event.pos)
+                            .mul(SCALE_PER_WHEEL / canvasModel.canvasScale.getValue().x));
                     if (nextScale.x > 0.1 && nextScale.y > 0.1) {
 
                         canvasModel.canvasScale.setValue(new Vector2d(nextScale));
