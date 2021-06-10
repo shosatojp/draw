@@ -170,7 +170,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>jp.shosato.draw.Main</mainClass>
+                            <mainClass>jp.shosato.micropaint.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
