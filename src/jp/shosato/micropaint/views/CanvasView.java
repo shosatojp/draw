@@ -26,8 +26,11 @@ import jp.shosato.micropaint.utils.Colors;
 import jp.shosato.micropaint.utils.Pair;
 import jp.shosato.micropaint.utils.Runnable;
 import jp.shosato.micropaint.utils.SingleValueObservable;
+import jp.shosato.micropaint.utils.Utility;
 
 public class CanvasView extends HorizontalContainerComponent {
+    private final double SCALE_PER_WHEEL = 0.05;
+    private final double TRANSLATE_PER_WHEEL = 20;
 
     public final Canvas canvas;
     public final SelectTool selectTool;
@@ -102,19 +105,40 @@ public class CanvasView extends HorizontalContainerComponent {
         canvasModel.canvasScale.addObserver((Vector2d canvasScale) -> {
             canvas.canvasScale = canvasScale;
         });
+        canvasModel.canvasTranslate.addObserver((Vector2d canvasTranslate) -> {
+            canvas.canvasTranslate = canvasTranslate;
+        });
 
         // EventHandlers
         selectTool.onSelectionChanged.addEventHandler((SelectionChangedEvent event) -> {
             this.selectionModel.change(event);
         });
         canvas.onScrolled.addEventHandler((ScrolledEvent event) -> {
+            // System.out.println(event.);
             int sign = (int) (event.offset / Math.abs(event.offset));
             switch (event.direction) {
                 case SCALE: {
-                    Vector2d nextScale = new Vector2d(canvasModel.canvasScale.getValue()).add(sign * 0.05, sign * 0.05);
-                    if (nextScale.x > 0 && nextScale.y > 0)
+                    Vector2d nextScale = new Vector2d(canvasModel.canvasScale.getValue()).add(sign * SCALE_PER_WHEEL,
+                            sign * SCALE_PER_WHEEL);
+                    Vector2d originalPos = Utility.transform(new Vector2d(),
+                            new Vector2d(canvas.getCenter()).mul(canvas.canvasScale), canvas.canvasTranslate,
+                            canvas.canvasScale, 0);
+                    Vector2d move = (new Vector2d(originalPos).sub(event.pos).mul(SCALE_PER_WHEEL));
+                    if (nextScale.x > 0.1 && nextScale.y > 0.1) {
+
                         canvasModel.canvasScale.setValue(new Vector2d(nextScale));
+                        canvasModel.canvasTranslate.setValue(canvasModel.canvasTranslate.getValue().sub(move));
+
+                    }
                 }
+                    break;
+                case HORIZONTAL:
+                    canvasModel.canvasTranslate
+                            .setValue(canvasModel.canvasTranslate.getValue().add(sign * TRANSLATE_PER_WHEEL, 0));
+                    break;
+                case VERTICAL:
+                    canvasModel.canvasTranslate
+                            .setValue(canvasModel.canvasTranslate.getValue().add(0, sign * TRANSLATE_PER_WHEEL));
                     break;
                 default:
                     break;

@@ -47,6 +47,7 @@ public class Canvas extends RectangleComponent implements MouseMoveEventListener
      * キャンバスの拡大率
      */
     public Vector2d canvasScale = new Vector2d(1, 1);
+    public Vector2d canvasTranslate = new Vector2d(0, 0);
     private Vector4d backgroundColor = new Vector4d(Colors.GRAY);
 
     public Canvas(double w, double h) {
@@ -95,7 +96,7 @@ public class Canvas extends RectangleComponent implements MouseMoveEventListener
             Utility.drawRectangleFill(dimension);
 
             glPushMatrix();
-            Utility.glTransform(dimension, new Vector2d(0, 0), canvasScale, 0);
+            Utility.glTransform(dimension, canvasTranslate, canvasScale, 0);
             {
                 /* キャンバスを描画 */
                 glColor3d(color.x, color.y, color.z);
@@ -146,7 +147,7 @@ public class Canvas extends RectangleComponent implements MouseMoveEventListener
 
     private void onMouseEvent(MouseEvent event, MouseEventInvoker invoker) {
         Vector2d original = new Vector2d(event.getPos());
-        event.setPos(Utility.untransform(original, getCenter(), new Vector2d(0, 0), canvasScale, 0));
+        event.setPos(Utility.untransform(original, getCenter(), canvasTranslate, canvasScale, 0));
         for (Entry<Tool, Boolean> e : tools.entrySet()) {
             if (e.getValue()) {
                 invoker.invoke(e.getKey(), event);
@@ -181,11 +182,12 @@ public class Canvas extends RectangleComponent implements MouseMoveEventListener
     @Override
     public void onScroll(MouseEvent event) {
         if (this.pressingShift) {
-            onScrolled.invoke(new ScrolledEvent(Direction.HORIZONTAL, event.getScroll().y));
+            onScrolled
+                    .invoke(new ScrolledEvent(Direction.HORIZONTAL, event.getScroll().y, new Vector2d(event.getPos())));
         } else if (this.pressingCtrl) {
-            onScrolled.invoke(new ScrolledEvent(Direction.VERTICAL, event.getScroll().y));
+            onScrolled.invoke(new ScrolledEvent(Direction.VERTICAL, event.getScroll().y, new Vector2d(event.getPos())));
         } else {
-            onScrolled.invoke(new ScrolledEvent(Direction.SCALE, event.getScroll().y));
+            onScrolled.invoke(new ScrolledEvent(Direction.SCALE, event.getScroll().y, new Vector2d(event.getPos())));
         }
     }
 
@@ -199,12 +201,17 @@ public class Canvas extends RectangleComponent implements MouseMoveEventListener
             case GLFW_RELEASE:
                 status = false;
                 break;
+            default:
+                status = true;
+                break;
         }
         switch (event.key) {
-            case GLFW_MOD_CONTROL:
+            case GLFW_KEY_LEFT_CONTROL:
+            case GLFW_KEY_RIGHT_CONTROL:
                 this.pressingCtrl = status;
                 break;
-            case GLFW_MOD_SHIFT:
+            case GLFW_KEY_LEFT_SHIFT:
+            case GLFW_KEY_RIGHT_SHIFT:
                 this.pressingShift = status;
                 break;
         }
