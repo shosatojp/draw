@@ -6,6 +6,9 @@ import jp.shosato.micropaint.events.focus.FocusInEventListener;
 import jp.shosato.micropaint.events.focus.FocusOutEvent;
 import jp.shosato.micropaint.events.focus.FocusOutEventListener;
 
+/**
+ * キーイベント送信先を決めるためにフォーカスを管理
+ */
 public class FocusController {
     private BasicComponent focused;
 

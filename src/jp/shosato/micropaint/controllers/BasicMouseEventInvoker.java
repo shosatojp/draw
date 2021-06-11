@@ -12,6 +12,9 @@ import jp.shosato.micropaint.events.mouse.MouseEventListener;
 import jp.shosato.micropaint.utils.Runnable;
 import jp.shosato.micropaint.utils.Utility;
 
+/**
+ * マウス関連イベントを発行する処理を共通化
+ */
 public class BasicMouseEventInvoker {
     /**
      * イベント発行条件

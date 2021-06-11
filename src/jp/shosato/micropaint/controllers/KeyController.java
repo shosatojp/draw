@@ -6,6 +6,9 @@ import jp.shosato.micropaint.events.key.CharInputEventListener;
 import jp.shosato.micropaint.events.key.KeyInputEvent;
 import jp.shosato.micropaint.events.key.KeyInputEventListener;
 
+/**
+ * キーイベントの発行
+ */
 public class KeyController {
     public void invokeKeyInputEvent(BasicComponent component, KeyInputEvent event) {
         if (component instanceof KeyInputEventListener) {

@@ -1,27 +1,27 @@
 package jp.shosato.micropaint.views;
 
-import static org.lwjgl.opengl.GL.*;
-
 import org.joml.Vector2d;
 
 import jp.shosato.micropaint.components.ButtonComponent;
 import jp.shosato.micropaint.components.FigureComponent;
 import jp.shosato.micropaint.components.LabelComponent;
 import jp.shosato.micropaint.components.VerticalContainerComponent;
-import jp.shosato.micropaint.components.figures.*;
-import jp.shosato.micropaint.events.NextDrawingListener;
+import jp.shosato.micropaint.components.figures.FreeLineFigure;
+import jp.shosato.micropaint.components.figures.PolygonFigure;
+import jp.shosato.micropaint.components.figures.RectangleFigure;
 import jp.shosato.micropaint.events.handlers.ButtonClickedEvent;
 import jp.shosato.micropaint.models.CanvasModel;
 import jp.shosato.micropaint.models.ColorModel;
 import jp.shosato.micropaint.models.CurrentFigureModel;
 import jp.shosato.micropaint.models.StrokeWidthModel;
 import jp.shosato.micropaint.models.ToolModel;
-import jp.shosato.micropaint.utils.BoundingBox;
 import jp.shosato.micropaint.utils.Pair;
 import jp.shosato.micropaint.utils.Runnable;
 import jp.shosato.micropaint.utils.SVGSerializer;
-import jp.shosato.micropaint.utils.Utility;
 
+/**
+ * ウィンドウ左のボタンをまとめるView
+ */
 public class ButtonsView extends VerticalContainerComponent {
 
     private final ButtonComponent selectButton;

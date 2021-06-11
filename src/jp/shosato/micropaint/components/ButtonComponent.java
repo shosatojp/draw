@@ -24,6 +24,9 @@ import jp.shosato.micropaint.utils.Utility;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * LabelComponentにホバー・クリック時の動作を追加
+ */
 public class ButtonComponent extends LabelComponent implements MouseClickEventListener, MouseMoveEventListener,
         MouseEnterEventListener, MouseLeaveEventListener {
 

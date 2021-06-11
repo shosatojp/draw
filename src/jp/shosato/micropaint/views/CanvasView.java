@@ -28,6 +28,9 @@ import jp.shosato.micropaint.utils.Runnable;
 import jp.shosato.micropaint.utils.SingleValueObservable;
 import jp.shosato.micropaint.utils.Utility;
 
+/**
+ * Canvasを扱うView
+ */
 public class CanvasView extends HorizontalContainerComponent {
     private final double SCALE_PER_WHEEL = 0.05;
     private final double TRANSLATE_PER_WHEEL = 20;
@@ -123,8 +126,8 @@ public class CanvasView extends HorizontalContainerComponent {
                     Vector2d nextScale = new Vector2d(canvasModel.canvasScale.getValue()).add(sign * SCALE_PER_WHEEL,
                             sign * SCALE_PER_WHEEL);
                     if (nextScale.x > 0.1 && nextScale.y > 0.1) {
-                        canvasModel.canvasScale.setValue(new Vector2d(nextScale));
                         canvasModel.canvasCenter.setValue(new Vector2d(event.pos));
+                        canvasModel.canvasScale.setValue(new Vector2d(nextScale));
                     }
                 }
                     break;

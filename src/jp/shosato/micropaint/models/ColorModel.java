@@ -4,6 +4,10 @@ import org.joml.Vector4d;
 
 import jp.shosato.micropaint.utils.SingleValueObservable;
 
+/**
+ * 色に関するモデル
+ * 色指定先（fill, stroke）の切り替えも行う
+ */
 public class ColorModel {
     public enum Target {
         FILL, STROKE

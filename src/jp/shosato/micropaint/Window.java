@@ -8,6 +8,9 @@ import jp.shosato.micropaint.components.BasicComponent;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL15.*;
 
+/**
+ * ウィンドウの作成と描画
+ */
 public class Window {
     private long windowHandle;
 
@@ -42,6 +45,9 @@ public class Window {
         return windowHandle;
     }
 
+    /**
+     * ウィンドウの描画
+     */
     public void draw() {
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BITS);
@@ -59,6 +65,7 @@ public class Window {
         glPushMatrix();
         glScaled(2f / width, -2f / height, 1f);
         glTranslated(-width / 2f, -height / 2f, 0);
+        /* ルート要素から再帰的に描画 */
         rootComponent.draw();
         glPopMatrix();
     }
@@ -68,8 +75,11 @@ public class Window {
      */
     public void loop() {
         while (!glfwWindowShouldClose(windowHandle)) {
+            /* イベント取得 */
             glfwPollEvents();
+            /* 描画 */
             this.draw();
+            /* ダブルバッファリング */
             glfwSwapBuffers(windowHandle);
         }
         glfwTerminate();

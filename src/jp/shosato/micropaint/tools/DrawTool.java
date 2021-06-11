@@ -1,6 +1,6 @@
 package jp.shosato.micropaint.tools;
 
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 
@@ -9,14 +9,13 @@ import org.joml.Vector4d;
 
 import jp.shosato.micropaint.components.Canvas;
 import jp.shosato.micropaint.components.FigureComponent;
-import jp.shosato.micropaint.events.Event;
-import jp.shosato.micropaint.events.NextDrawingListener;
-import jp.shosato.micropaint.events.handlers.ColorChangedEvent;
-import jp.shosato.micropaint.events.handlers.ColorChangedEventHandler;
 import jp.shosato.micropaint.events.mouse.MouseClickEventListener;
 import jp.shosato.micropaint.events.mouse.MouseEvent;
 import jp.shosato.micropaint.events.mouse.MouseMoveEventListener;
 
+/**
+ * 図形を描画するツール
+ */
 public class DrawTool extends Tool implements MouseMoveEventListener, MouseClickEventListener {
 
     /**
@@ -33,6 +32,9 @@ public class DrawTool extends Tool implements MouseMoveEventListener, MouseClick
         super(canvas);
     }
 
+    /**
+     * 描画中の図形を描画する責任を持つ
+     */
     @Override
     public void draw() {
         if (current != null) {
@@ -65,6 +67,9 @@ public class DrawTool extends Tool implements MouseMoveEventListener, MouseClick
         }
     }
 
+    /**
+     * マウスクリックしたときどうするかは図形に聞く
+     */
     @Override
     public void onMouseClicked(MouseEvent event) {
         if (current != null) {
@@ -72,6 +77,9 @@ public class DrawTool extends Tool implements MouseMoveEventListener, MouseClick
         }
     }
 
+    /**
+     * マウス移動時も各図形に聞く
+     */
     @Override
     public void onMouseMoved(MouseEvent event) {
         if (current != null) {
@@ -84,18 +92,6 @@ public class DrawTool extends Tool implements MouseMoveEventListener, MouseClick
                 firstPointColor = highlightPointColor;
             }
         }
-    }
-
-    @Deprecated
-    public void startDrawing(NextDrawingListener next) {
-        current = next.onNextDrawing();
-        current.onFinished.addEventHandler((Event event) -> {
-            if (current != null) {
-                canvas.addChildComponent(current);
-                current = null;
-                startDrawing(next);
-            }
-        });
     }
 
     public void setCurrentFigure(FigureComponent figure) {

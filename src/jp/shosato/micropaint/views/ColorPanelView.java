@@ -12,6 +12,9 @@ import jp.shosato.micropaint.events.handlers.ColorChangedEvent;
 import jp.shosato.micropaint.models.ColorModel;
 import jp.shosato.micropaint.utils.Utility;
 
+/**
+ * 色選択パネルのView
+ */
 public class ColorPanelView extends VerticalContainerComponent {
     private final ColorPickerComponent colorPicker;
     private final LabelComponent fillColorLabel;

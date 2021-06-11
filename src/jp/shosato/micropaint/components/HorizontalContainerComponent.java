@@ -7,6 +7,9 @@ import org.joml.Vector4d;
 
 import jp.shosato.micropaint.utils.Colors;
 
+/**
+ * 水平にコンポーネントを並べるコンテナ
+ */
 public class HorizontalContainerComponent extends RectangleComponent {
 
     public HorizontalContainerComponent(double w, double h) {

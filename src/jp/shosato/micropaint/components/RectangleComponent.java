@@ -10,6 +10,10 @@ import jp.shosato.micropaint.utils.BoundingBox;
 import jp.shosato.micropaint.utils.Colors;
 import jp.shosato.micropaint.utils.Utility;
 
+/**
+ * 長方形コンポーネント
+ * 他の四角いコンポーネントの基底クラス
+ */
 public class RectangleComponent extends BasicComponent {
 
     protected Vector4d color = new Vector4d(Colors.GRAY);

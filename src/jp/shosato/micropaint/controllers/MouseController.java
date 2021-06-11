@@ -9,6 +9,9 @@ import jp.shosato.micropaint.events.mouse.MouseEvent;
 import jp.shosato.micropaint.events.mouse.MouseLeaveEventListener;
 import jp.shosato.micropaint.events.mouse.MouseMoveEventListener;
 
+/**
+ * マウスイベントの発行
+ */
 public class MouseController {
     public final FocusController focusController;
 

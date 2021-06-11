@@ -5,6 +5,9 @@ import jp.shosato.micropaint.events.handlers.TextInputEvent;
 import jp.shosato.micropaint.models.StrokeWidthModel;
 import jp.shosato.micropaint.utils.SingleValueObserver;
 
+/**
+ * 枠線の幅の入力と表示のView
+ */
 public class StrokeWidthView extends InputComponent {
     public StrokeWidthView(StrokeWidthModel model) {
         super(100, 40);

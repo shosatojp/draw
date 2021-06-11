@@ -18,6 +18,10 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
+/**
+ * テキスト表示用のコンポーネント
+ * OpenGLのテクスチャに文字を書き込んで描画する
+ */
 public class LabelComponent extends RectangleComponent {
     private Alignment alignment = Alignment.CENTER;
     private Font font = new Font(Font.MONOSPACED, Font.PLAIN, 16);

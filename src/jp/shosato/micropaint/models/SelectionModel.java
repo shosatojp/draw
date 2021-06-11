@@ -7,6 +7,9 @@ import jp.shosato.micropaint.components.FigureComponent;
 import jp.shosato.micropaint.events.handlers.SelectionChangedEvent;
 import jp.shosato.micropaint.utils.SingleValueObservable;
 
+/**
+ * 選択中の図形を管理
+ */
 public class SelectionModel {
 
     public final SingleValueObservable<HashSet<FigureComponent>> selectedFigures = new SingleValueObservable<>(new HashSet<>());

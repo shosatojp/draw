@@ -19,6 +19,11 @@ import jp.shosato.micropaint.utils.IBoundingBox;
 import jp.shosato.micropaint.utils.IDrawable2D;
 import jp.shosato.micropaint.utils.Utility;
 
+/**
+ * 描画可能なすべてのGUIコンポーネントの基底クラス
+ * * 図形の大きさや変形を定義
+ * * 子要素・親要素の取り扱い
+ */
 public abstract class BasicComponent extends Hoverable implements IDrawable2D, IBoundingBox {
     /**
      * 縦横

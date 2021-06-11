@@ -29,6 +29,10 @@ import jp.shosato.micropaint.events.mouse.MouseClickEventListener;
 import jp.shosato.micropaint.events.mouse.MouseEvent;
 import jp.shosato.micropaint.utils.Utility;
 
+/**
+ * テキスト入力用のコンポーネント
+ * LabelComponentに加えてカーソルの描画、キー押下イベントを扱う
+ */
 public class InputComponent extends LabelComponent implements CharInputEventListener, FocusInEventListener,
         MouseClickEventListener, KeyInputEventListener, FocusOutEventListener {
 

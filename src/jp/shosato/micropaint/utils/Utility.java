@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
+/**
+ * ユーティリティ関数
+ */
 public class Utility {
 
     public static void drawRectangleFill(Vector2d center, Vector2d scale, double rotate) {

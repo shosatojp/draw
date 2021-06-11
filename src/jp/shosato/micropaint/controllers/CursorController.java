@@ -9,6 +9,9 @@ import jp.shosato.micropaint.components.BasicComponent;
 import jp.shosato.micropaint.events.mouse.MouseEvent;
 import jp.shosato.micropaint.utils.Utility;
 
+/**
+ * カーソルのスタイルに関するクラス
+ */
 public class CursorController {
 
     public void setCursor(long _window, BasicComponent rootComponent, Vector2d pos) {

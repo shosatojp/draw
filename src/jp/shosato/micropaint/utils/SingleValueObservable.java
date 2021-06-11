@@ -2,6 +2,9 @@ package jp.shosato.micropaint.utils;
 
 import java.util.ArrayList;
 
+/**
+ * ジェネリック版Observable
+ */
 public class SingleValueObservable<T> {
     private ArrayList<SingleValueObserver<T>> observers = new ArrayList<>();
 

@@ -15,15 +15,28 @@ import jp.shosato.micropaint.events.mouse.MouseClickEventListener;
 import jp.shosato.micropaint.events.mouse.MouseEvent;
 import jp.shosato.micropaint.utils.BoundingBox;
 
+/**
+ * 選択ツール
+ */
 public class SelectTool extends Tool implements MouseClickEventListener {
 
+    /**
+     * 選択範囲を描画する図形。状態はModelで持つためこれは一時的
+     */
     private HashSet<FigureComponent> selectedFigures = new HashSet<FigureComponent>();
+
+    /**
+     * 選択状態が変化したときのイベント
+     */
     public final EventHandler<SelectionChangedEventHandler> onSelectionChanged = new EventHandler<>();
 
     public SelectTool(Canvas canvas) {
         super(canvas);
     }
 
+    /**
+     * 選択状態は外部から設定
+     */
     public void setSelectedFigures(HashSet<FigureComponent> selectedFigures) {
         this.selectedFigures = selectedFigures;
     }
@@ -37,7 +50,7 @@ public class SelectTool extends Tool implements MouseClickEventListener {
     }
 
     /**
-     * Canvasから呼ばれる
+     * 選択状態が変化したらイベントを発行
      */
     @Override
     public void onMouseClicked(MouseEvent event) {

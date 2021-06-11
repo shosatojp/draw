@@ -6,6 +6,9 @@ import java.util.HashSet;
 import jp.shosato.micropaint.tools.Tool;
 import jp.shosato.micropaint.utils.SingleValueObservable;
 
+/**
+ * ツールの有効化状態を管理
+ */
 public class ToolModel {
 
     public final SingleValueObservable<HashMap<Tool, Boolean>> tools = new SingleValueObservable<>(new HashMap<>());

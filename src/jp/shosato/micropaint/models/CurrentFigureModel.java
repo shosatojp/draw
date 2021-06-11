@@ -8,6 +8,9 @@ import jp.shosato.micropaint.utils.Pair;
 import jp.shosato.micropaint.utils.Runnable;
 import jp.shosato.micropaint.utils.SingleValueObservable;
 
+/**
+ * 現在描画中の図形を管理
+ */
 public class CurrentFigureModel {
     public final SingleValueObservable<Pair<FigureComponent, Runnable<FigureComponent>>> currentFigure = new SingleValueObservable<>();
 }

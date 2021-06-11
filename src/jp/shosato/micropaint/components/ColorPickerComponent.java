@@ -18,6 +18,9 @@ import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * HSV色空間から色を取得
+ */
 public class ColorPickerComponent extends RectangleComponent
         implements MouseMoveEventListener, MouseClickEventListener, MouseLeaveEventListener {
 

@@ -17,11 +17,15 @@ import jp.shosato.micropaint.events.mouse.MouseMoveEventListener;
 import jp.shosato.micropaint.utils.BoundingBox;
 import jp.shosato.micropaint.utils.IBoundingBox;
 
+/**
+ * 図形コンポーネントの基底クラス
+ * 塗りつぶし色、枠の色、枠の太さは全図形共通
+ */
 public abstract class FigureComponent extends BasicComponent implements IFigure, MouseClickEventListener,
         MouseEnterEventListener, MouseLeaveEventListener, MouseMoveEventListener {
 
     /**
-     * 描画終了イベントハンドラ
+     * 描画終了イベントハンドラ。DrawToolで使う
      */
     public EventHandler<FinishDrawingHandler> onFinished = new EventHandler<>();
 

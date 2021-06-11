@@ -35,6 +35,9 @@ import jp.shosato.micropaint.views.CanvasView;
 import jp.shosato.micropaint.views.ColorPanelView;
 import jp.shosato.micropaint.views.StrokeWidthView;
 
+/**
+ * メインクラス
+ */
 class Main {
     private Window window;
 
@@ -55,6 +58,9 @@ class Main {
         window.loop();
     }
 
+    /**
+     * GUI構築
+     */
     private void createWindow(RootComponent root) {
 
         // Models

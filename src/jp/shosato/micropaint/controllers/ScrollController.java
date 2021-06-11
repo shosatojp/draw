@@ -4,6 +4,9 @@ import jp.shosato.micropaint.components.BasicComponent;
 import jp.shosato.micropaint.events.mouse.MouseEvent;
 import jp.shosato.micropaint.events.scroll.ScrollInputEventListener;
 
+/**
+ * スクロールイベントの発行
+ */
 public class ScrollController {
     /**
      * [マウス移動イベント] クリックと同じ

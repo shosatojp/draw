@@ -12,10 +12,16 @@ import jp.shosato.micropaint.events.mouse.MouseMoveEventListener;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * 移動ツール
+ */
 public class MoveTool extends Tool
         implements MouseClickEventListener, MouseMoveEventListener, MouseEnterEventListener, MouseLeaveEventListener {
 
     private Vector2d prevPos;
+    /**
+     * 移動中かどうかのフラグ（マウス押下など）
+     */
     private boolean moving = false;
 
     /**
@@ -33,6 +39,10 @@ public class MoveTool extends Tool
 
     }
 
+    /**
+     * 前回からのマウス移動量だけ図形を移動
+     * 対象は選択ツールで選択したものすべて
+     */
     @Override
     public void onMouseMoved(MouseEvent event) {
         if (moving) {
@@ -45,6 +55,10 @@ public class MoveTool extends Tool
         }
     }
 
+    /**
+     * マウスクリック時に移動開始
+     * 離すと終了
+     */
     @Override
     public void onMouseClicked(MouseEvent event) {
         switch (event.getButton()) {
