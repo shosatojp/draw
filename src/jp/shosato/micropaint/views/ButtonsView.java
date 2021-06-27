@@ -108,7 +108,7 @@ public class ButtonsView extends VerticalContainerComponent {
             // bb.getWidth(), (int) bb.getHeight(),
             // "screenshot.ppm");
             try {
-                new SVGSerializer(canvasView.canvas).toFile("test.svg");
+                new SVGSerializer(canvasView.canvas).toFile("draw.svg");
             } catch (Exception e) {
                 System.out.println(e);
             }

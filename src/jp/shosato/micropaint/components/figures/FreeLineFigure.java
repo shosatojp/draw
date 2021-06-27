@@ -98,4 +98,11 @@ public class FreeLineFigure extends FigureComponent {
             dot.add(d);
         }
     }
+
+    @Override
+    public Vector4d getFill() {
+        Vector4d fill = new Vector4d(this.fillColor);
+        fill.w = 0;
+        return fill;
+    }
 }

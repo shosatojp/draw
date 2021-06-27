@@ -111,7 +111,7 @@ public class LabelComponent extends RectangleComponent {
     }
 
     /**
-     * @apiNote テクスチャの再生成はコストが高いので、テキスト変更時のみ
+     * テクスチャの再生成はコストが高いので、テキスト変更時のみ
      */
     public void updateText() {
         this.textDimension = getTextDimension(text, font);
@@ -123,7 +123,7 @@ public class LabelComponent extends RectangleComponent {
     }
 
     /**
-     * @apiNote アラインメント計算
+     * アラインメント計算
      */
     protected Vector2d getTextTopLeft(int w, int h) {
         switch (alignment) {
@@ -136,7 +136,7 @@ public class LabelComponent extends RectangleComponent {
     }
 
     /**
-     * @apiNote OpenGLのテクスチャメモリに転送。1バイトアラインメント、RGBA限定
+     * OpenGLのテクスチャメモリに転送。1バイトアラインメント、RGBA限定
      */
     private static void transferTexture(int id, ByteBuffer buffer, int w, int h) {
         glBindTexture(GL_TEXTURE_2D, id);
@@ -147,7 +147,7 @@ public class LabelComponent extends RectangleComponent {
     }
 
     /**
-     * @apiNote awtのBufferedImageではARGBの順でしか作成できないが、OpenGLはRGBAの順なので入れ替える
+     * awtのBufferedImageではARGBの順でしか作成できないが、OpenGLはRGBAの順なので入れ替える
      * @param bufferedImage awtで作成したバッファ。BufferedImage.TYPE_INT_ARGBのみ
      * @return OpenGLに読み込めるByteBuffer
      */
@@ -188,7 +188,7 @@ public class LabelComponent extends RectangleComponent {
     }
 
     /**
-     * @apiNote awtのGraphics2Dを用いてビットマップ画像生成
+     * awtのGraphics2Dを用いてビットマップ画像生成
      */
     private static BufferedImage createTextImage(String str, int width, int height, Font font, Color color) {
 
